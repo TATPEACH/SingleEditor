@@ -1,9 +1,9 @@
 {
   "schema": "singleeditor.optional-runtime-notice-origins",
   "version": 1,
-  "scope": "Selected local-use runtime: CLI rebuilt from fixed r2083 with USE_G719=OFF; other codec DLLs retained from the identified official archive. Public source delivery remains separate.",
+  "scope": "Selected runtime: fixed r2083 CLI rebuilt USE_G719=OFF, official mpg123 1.31.0 x86 DLL, remaining codec DLLs from the identified official r2083 archive. Public source delivery remains separate.",
   "runtime": {
-    "release": "r2083-se-g719off",
+    "release": "r2083-se-g719off-mpg1231310",
     "commit": "57df2e179d929532094f4e4dd42ce5395514622b",
     "build_date": "2026-10-11",
     "configuration": "Release",
@@ -60,8 +60,8 @@
       },
       {
         "name": "libmpg123-0.dll",
-        "bytes": 426551,
-        "sha256": "2BAE5DCB2071B09D9B1C1803EC345954E80046BDC4CAE08BC85853040AC6202B"
+        "bytes": 439863,
+        "sha256": "F2963C9B8AEE2DF1C28CA323CAA72CE14F0316694636AC58F0F9D47C9810ACAB"
       },
       {
         "name": "libspeex-1.dll",
@@ -166,11 +166,11 @@
       "members": [
         "libmpg123-0.dll"
       ],
-      "declared_source": "Recipe 1.31.1; mirror aec901b7a636b6eb61e03a87ff3547c787e8c693",
+      "declared_source": "Official mpg123 1.31.0 source archive",
       "notices": [
-        "mpg123-1.31.1.COPYING"
+        "mpg123-1.31.0.COPYING"
       ],
-      "scope": "BUILD declares 1.32.0 / 1.31.1 and links an official 1.31.0 x86 prebuilt. That linked archive's DLL (439863 bytes, F2963C9B8AEE2DF1C28CA323CAA72CE14F0316694636AC58F0F9D47C9810ACAB) does not match the current DLL. Current version resources and version-query exports are absent; actual source version remains unresolved. A byte mismatch does not exclude a differently built copy of the same source version. The original notice is retained without asserting that 1.31.1 is the binary version."
+      "scope": "Selected official 1.31.0 x86 prebuilt linked by fixed r2083 BUILD instructions. Archive SHA256 8B76A5F760EB98A3EC5C1EC1C619E4721E0E5C641286823DF382330C9B3C8B1C; member SHA256 F2963C9B8AEE2DF1C28CA323CAA72CE14F0316694636AC58F0F9D47C9810ACAB. Matching source archive retained. Historical unidentified DLL remains only in the reference inventory. All eight helper imports exist; actual RIFF/MP3, Opus WEM and BNK decode comparisons pass."
     },
     {
       "id": "atrac9",
@@ -293,11 +293,11 @@
       "method": "exact-file-copy"
     },
     {
-      "path": "mpg123-1.31.1.COPYING",
-      "upstream_url": "https://raw.githubusercontent.com/vgmstream/vgmstream/57df2e179d929532094f4e4dd42ce5395514622b/ext_libs/licenses/mpg123-1.31.1.COPYING",
+      "path": "mpg123-1.31.0.COPYING",
+      "upstream_url": "https://www.mpg123.org/download/mpg123-1.31.0.tar.bz2",
       "bytes": 40718,
       "sha256": "C22482728A634A8DFDB4FF72A96D4C1ED64CD8F3E79335C401751AC591609366",
-      "method": "exact-file-copy"
+      "method": "exact-file-copy-from-official-source-archive"
     },
     {
       "path": "opus-1.3.1.COPYING",
@@ -315,8 +315,8 @@
     }
   ],
   "source_archives": {
-    "status": "acquired-declared-sources-historical-correspondence-pending",
-    "scope": "Nine actual archives cover seven dependency families. Digests identify downloaded bytes, not independent upstream signatures or proof of the historical DLL build. Final corresponding-source delivery remains incomplete.",
+    "status": "acquired-declared-sources-selected-mpg123-known",
+    "scope": "Ten actual archives cover eight dependency families. Selected mpg123 uses official versioned binary and source archives; other archive digests identify acquired source bytes, not independent proof of historical DLL builds. Final source delivery remains separate.",
     "archives": [
       {
         "family": "vgmstream",
@@ -380,6 +380,13 @@
         "url": "https://codeload.github.com/Thealexbarney/LibAtrac9/tar.gz/6a9e00f6c7abd74d037fd210b6670d3cdb313049",
         "bytes": 65160,
         "sha256": "ED987A89857F6BA09019017EB6B5C7843F78A041AA55EEE10A301B65AFEB2706"
+      },
+      {
+        "family": "mpg123",
+        "version": "1.31.0",
+        "url": "https://www.mpg123.org/download/mpg123-1.31.0.tar.bz2",
+        "bytes": 1092978,
+        "sha256": "481BC0DD78904B28D7F8DF7456603A71BDCBC7140716C0C3EC8A1A6635F58C81"
       }
     ],
     "recipe_files_in_vgmstream_archive": [
@@ -396,9 +403,7 @@
         "historical_use_proven": false
       }
     ],
-    "unselected": [
-      "mpg123: actual binary version remains unresolved"
-    ]
+    "unselected": []
   },
   "project_license_selected": true,
   "project_license_spdx": "AGPL-3.0-only",

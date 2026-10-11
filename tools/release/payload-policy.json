@@ -386,8 +386,8 @@
     },
     {
       "source": "notices",
-      "path": "vgmstream-r2083/mpg123-1.31.1.COPYING",
-      "destination": "licenses/vgmstream-r2083/mpg123-1.31.1.COPYING",
+      "path": "vgmstream-r2083/mpg123-1.31.0.COPYING",
+      "destination": "licenses/vgmstream-r2083/mpg123-1.31.0.COPYING",
       "physical_kinds": [
         "license"
       ],
