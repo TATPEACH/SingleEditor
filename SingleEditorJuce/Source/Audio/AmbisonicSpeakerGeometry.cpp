@@ -203,17 +203,13 @@ const generated::StandardGeometryData* findGeneratedGeometryForLayout(
     {
         if (candidate.speakerCount != static_cast<int>(targetLayout.selectedRoles.size()))
             continue;
-        auto matches = true;
+        std::array<SpeakerRole, RoutingMatrix::maxChannels> roles {};
         for (auto index = 0; index < candidate.speakerCount; ++index)
-        {
-            if (static_cast<SpeakerRole>(candidate.speakers[static_cast<std::size_t>(index)].role)
-                != targetLayout.selectedRoles[static_cast<std::size_t>(index)])
-            {
-                matches = false;
-                break;
-            }
-        }
-        if (matches)
+            roles[static_cast<std::size_t>(index)] =
+                static_cast<SpeakerRole>(candidate.speakers[static_cast<std::size_t>(index)].role);
+        // A speaker geometry identifies roles, not interleaved device slots.
+        if (std::is_permutation(targetLayout.selectedRoles.begin(), targetLayout.selectedRoles.end(),
+                                roles.begin(), roles.begin() + candidate.speakerCount))
             return &candidate;
     }
     return nullptr;

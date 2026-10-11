@@ -653,13 +653,15 @@ MetadataSidebarComponent::MetadataSidebarComponent(AudioEngine& engineToUse,
     pingRoleButton.setTooltip("Play a short low-level speaker test signal for the selected role.");
     pingRoleButton.onClick = [this]
     {
-        const auto info = engine.getLoadedFileInfo();
-        const auto selectedIndex = pingRoleBox.getSelectedItemIndex();
-        if (!info.isValid() || !juce::isPositiveAndBelow(selectedIndex, static_cast<int>(info.channelLayout.selectedRoles.size())))
+        const auto roleId = pingRoleBox.getSelectedId();
+        if (!document.hasAudio() || roleId <= 0)
             return;
 
-        const auto role = info.channelLayout.selectedRoles[static_cast<std::size_t>(selectedIndex)];
-        if (!ChannelLayoutCatalog::isAmbisonicRole(role))
+        // Bind the displayed role itself, rather than an index into a separately
+        // refreshed engine snapshot after a source-interpretation change.
+        const auto role = static_cast<SpeakerRole>(roleId - 1);
+        if (role != SpeakerRole::unknown && role != SpeakerRole::discrete
+            && !ChannelLayoutCatalog::isAmbisonicRole(role))
             engine.pingSpeakerRole(role);
     };
     addAndMakeVisible(pingRoleButton);
@@ -1155,7 +1157,10 @@ void MetadataSidebarComponent::refreshChannelControls()
         binauralPreparation.reset();
         pendingBinauralState.reset();
     }
-    const auto info = engine.getLoadedFileInfo();
+    // Source controls follow the synchronous document state. Engine listeners
+    // receive that state asynchronously and may still describe the old order.
+    const auto sourceState = document.getState();
+    const auto& info = sourceState->info;
     suppressChannelCallbacks = true;
     channelOrderBox.clear(juce::dontSendNotification);
     pingRoleBox.clear(juce::dontSendNotification);
@@ -1177,9 +1182,8 @@ void MetadataSidebarComponent::refreshChannelControls()
         if (selectedIndex >= 0)
             channelOrderBox.setSelectedItemIndex(selectedIndex, juce::dontSendNotification);
 
-        auto roleItemId = 1;
         for (const auto role : info.channelLayout.selectedRoles)
-            pingRoleBox.addItem(ChannelLayoutCatalog::roleToAbbreviation(role), roleItemId++);
+            pingRoleBox.addItem(ChannelLayoutCatalog::roleToAbbreviation(role), static_cast<int>(role) + 1);
         const auto canPingSpeaker = pingRoleBox.getNumItems() > 0
                                  && !info.channelLayout.isAmbisonic;
         pingRoleBox.setEnabled(canPingSpeaker);

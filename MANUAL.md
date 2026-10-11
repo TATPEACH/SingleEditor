@@ -220,7 +220,9 @@ Simple 是同一文档的显示方式，不是另外打开一份文件，也不�
 
 Mag 是工作区中的一个功能面板，例如 Playlist、Metadata、Markers、Output Meter、Parametric EQ 或 True-Peak Limiter。当前版本使用内置面板；这不代表已经提供第三方动态插件或热插拔解码器接口。
 
-可从工具栏、**View → Modules** 或命令面板打开和关闭面板。拖动面板标题或标签可调整停靠位置；出现放置预览时释放。拖动分隔线可调整分区大小，**Esc** 可取消尚未提交的拖动。
+在 Modern 工作区，从 **More → Mag** 集中打开和关闭 Playlist、File Information、Markers、Output Meter、Parametric EQ、True-Peak Limiter、Ambisonic Energy 和 Rendered Output Spatial Energy。勾选表示已开启；当前文件不支持的面板置灰。关闭后可从同一菜单重新打开，**Reset Mag Layout** 恢复布局。工具栏、经典菜单 **View → Modules** 和命令面板也保留对应入口。
+
+拖动面板标题或标签可调整停靠位置；出现放置预览时释放。拖动分隔线可调整分区大小，**Esc** 可取消尚未提交的拖动。
 
 - **Float …**：把面板移到独立浮动窗口。
 - **Redock …**：把面板放回主工作区。
@@ -309,6 +311,18 @@ Mag 是工作区中的一个功能面板，例如 Playlist、Metadata、Markers�
 | **Ping** | 通过当前路由播放所选扬声器角色的低电平测试信号 |
 
 源声道解释、语义角色和声卡物理输出是三个不同概念。比如把源文件解释为 5.1，不会自动证明你的六根输出线已经接到相应扬声器。更改默认源声道顺序也不会重排设备端口。
+
+以带标准 WAVE channel mask 的 7.1 文件为例，其原始声道顺序是“前方四路、后方一对、侧面一对”。SE 的 7.1 SMPTE 源预设则把侧面一对放在后方一对之前：
+
+| 源文件声道 | WAVE mask 解释 | SE 的 7.1 SMPTE 解释 |
+|---|---|---|
+| CH1–4 | L、R、C、LFE | L、R、C、LFE |
+| CH5 | Lsr，左后 | Lss，左侧环绕 |
+| CH6 | Rsr，右后 | Rss，右侧环绕 |
+| CH7 | Lss，左侧环绕 | Lsr，左后 |
+| CH8 | Rss，右侧环绕 | Rsr，右后 |
+
+**CH5 是文件里的第五条音轨，不天然等于“左侧”或“左后”。** 源预设为每条音轨指定角色，播放路由再把角色送到设备端口。切换源预设会同时改变标签和监听路由，不会交换文件中的样本。文件自带可信 WAVE mask 时，保留该解释；不要用源预设补偿接线或设备输出顺序问题。Windows/WAVE 默认输出的后方一对也在侧面一对之前。语义 **Ping Lsr** 应始终检查左后输出，不能因为源预设变化就变成左侧。
 
 通道映射对话框中，选择相应连接后用 **Apply** 应用；**Default** 恢复默认，**Cancel** 放弃本次更改。测试前先降低监听音量，按实际接线确认。
 

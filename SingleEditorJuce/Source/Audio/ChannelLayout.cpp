@@ -517,18 +517,18 @@ ChannelLayoutState ChannelLayoutCatalog::deviceDefaultLayoutForOutputChannels(in
         case 8:
             return makeState(preset("windows-wave-7.1",
                                     "Windows / WAVE 7.1 output",
-                                    "L R C LFE Lss Rss Lsr Rsr",
+                                    "L R C LFE Lsr Rsr Lss Rss",
                                     8,
-                                    { SpeakerRole::L, SpeakerRole::R, SpeakerRole::C, SpeakerRole::LFE, SpeakerRole::Lss, SpeakerRole::Rss, SpeakerRole::Lsr, SpeakerRole::Rsr },
+                                    { SpeakerRole::L, SpeakerRole::R, SpeakerRole::C, SpeakerRole::LFE, SpeakerRole::Lsr, SpeakerRole::Rsr, SpeakerRole::Lss, SpeakerRole::Rss },
                                     true),
                              {},
                              false);
         case 12:
             return makeState(preset("windows-wave-7.1.4",
                                     "Windows / WAVE 7.1.4 output",
-                                    "L R C LFE Lss Rss Lsr Rsr Ltf Rtf Ltr Rtr",
+                                    "L R C LFE Lsr Rsr Lss Rss Ltf Rtf Ltr Rtr",
                                     12,
-                                    { SpeakerRole::L, SpeakerRole::R, SpeakerRole::C, SpeakerRole::LFE, SpeakerRole::Lss, SpeakerRole::Rss, SpeakerRole::Lsr, SpeakerRole::Rsr, SpeakerRole::Ltf, SpeakerRole::Rtf, SpeakerRole::Ltr, SpeakerRole::Rtr },
+                                    { SpeakerRole::L, SpeakerRole::R, SpeakerRole::C, SpeakerRole::LFE, SpeakerRole::Lsr, SpeakerRole::Rsr, SpeakerRole::Lss, SpeakerRole::Rss, SpeakerRole::Ltf, SpeakerRole::Rtf, SpeakerRole::Ltr, SpeakerRole::Rtr },
                                     true),
                              {},
                              false);

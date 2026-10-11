@@ -1191,12 +1191,13 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
     generalSceneButton.onClick = [this] { dispatchGuiCommand(commandIds::generalScene, GuiCommandSource::toolbar); };
     simpleViewButton.onClick = [this] { dispatchGuiCommand(commandIds::simpleView, GuiCommandSource::toolbar); };
     toolbarMoreButton.setComponentID("toolbar.more");
-    toolbarMoreButton.setTitle("More file, edit and view commands");
-    toolbarMoreButton.setTooltip("File, edit, view and audio commands");
+    toolbarMoreButton.setTitle("More file, edit, Mag and view commands");
+    toolbarMoreButton.setTooltip("File, edit, Mag, view and audio commands");
     toolbarMoreButton.onClick = [this]
     {
         juce::PopupMenu menu;
         std::vector<juce::Component::SafePointer<juce::Button>> actions;
+        std::vector<std::string_view> magCommands;
         auto add = [&] (juce::PopupMenu& target, juce::Button& button)
         {
             actions.emplace_back(&button);
@@ -1241,6 +1242,26 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
                               &ampZoomOutButton, &ampZoomInButton, &resetViewButton })
             add(viewMenu, *button);
         menu.addSubMenu("View", viewMenu);
+        juce::PopupMenu magMenu;
+        const auto magContext = makeCommandContext(GuiCommandSource::menu, "more-mag-menu");
+        const auto addMag = [&] (std::string_view commandId, const char* label)
+        {
+            magCommands.push_back(commandId);
+            const auto state = commandRegistry.resolve(commandId, magContext);
+            magMenu.addItem(1300 + static_cast<int>(magCommands.size()), label,
+                            state && state->state.enabled, state && state->state.checked);
+        };
+        addMag(commandIds::togglePlaylistSidebar, "Playlist");
+        addMag(commandIds::toggleMetadataSidebar, "File Information");
+        addMag(commandIds::toggleMarkers, "Markers");
+        addMag(commandIds::toggleOutputMeter, "Output Meter");
+        addMag(commandIds::toggleParametricEq, "Parametric EQ");
+        addMag(commandIds::toggleTruePeakLimiter, "True-Peak Limiter");
+        addMag(commandIds::toggleAmbisonicEnergy, "Ambisonic Energy");
+        addMag(commandIds::toggleSpatialEnergy, "Rendered Output Spatial Energy");
+        magMenu.addSeparator();
+        addMag(commandIds::resetModuleLayout, "Reset Mag Layout");
+        menu.addSubMenu("Mag", magMenu);
         juce::PopupMenu audioMenu;
         add(audioMenu, autoPlayButton);
         if (parametricEqButton != nullptr) add(audioMenu, *parametricEqButton);
@@ -1256,9 +1277,16 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
         appearanceMenu.addItem(1103, "Liquid glass", true, RendererVisualStyle::glassMaterial() == ModernGlassMaterial::liquid);
         menu.addSubMenu("Appearance", appearanceMenu);
         menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&toolbarMoreButton).withMinimumWidth(220),
-            [actions = std::move(actions), safe = juce::Component::SafePointer<MainComponent>(this)] (int result)
+            [actions = std::move(actions), magCommands = std::move(magCommands),
+             safe = juce::Component::SafePointer<MainComponent>(this)] (int result)
             {
                 if (safe == nullptr) return;
+                if (result > 1300 && result <= 1300 + static_cast<int>(magCommands.size()))
+                {
+                    safe->dispatchGuiCommand(magCommands[static_cast<std::size_t>(result - 1301)],
+                                             GuiCommandSource::menu);
+                    return;
+                }
                 if (result == 1201)
                 {
                     safe->dispatchGuiCommand(commandIds::palette, GuiCommandSource::menu);

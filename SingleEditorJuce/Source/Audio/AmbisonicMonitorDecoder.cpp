@@ -1,5 +1,6 @@
 #include "Audio/AmbisonicMonitorDecoder.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace singleeditor
@@ -345,6 +346,12 @@ RoutingMatrix AmbisonicMonitorDecoder::buildRoutingMatrix(
     matrix.sourceChannels = sourceChannelCount;
     matrix.outputChannels = artifact->outputChannels;
     matrix.gains.fill(0.0f);
+    std::array<int, RoutingMatrix::maxChannels> artifactRows {};
+    for (auto output = 0; output < matrix.outputChannels; ++output)
+        for (auto row = 0; row < artifact->outputChannels; ++row)
+            if (artifact->speakers[static_cast<std::size_t>(row)].role
+                == targetLayout.selectedRoles[static_cast<std::size_t>(output)])
+                artifactRows[static_cast<std::size_t>(output)] = row;
     if (orientation.isIdentity())
     {
         for (auto output = 0; output < matrix.outputChannels; ++output)
@@ -354,7 +361,7 @@ RoutingMatrix AmbisonicMonitorDecoder::buildRoutingMatrix(
                 if (sourceChannelIsAudible(source, playbackState))
                 {
                     matrix.gain(output, source) =
-                        artifact->gains[(output * artifact->sourceChannels) + source];
+                        artifact->gains[(artifactRows[static_cast<std::size_t>(output)] * artifact->sourceChannels) + source];
                 }
             }
         }
@@ -364,7 +371,7 @@ RoutingMatrix AmbisonicMonitorDecoder::buildRoutingMatrix(
     std::array<float, 16> basis {};
     for (auto output = 0; output < matrix.outputChannels; ++output)
     {
-        const auto& speaker = artifact->speakers[static_cast<std::size_t>(output)];
+        const auto& speaker = artifact->speakers[static_cast<std::size_t>(artifactRows[static_cast<std::size_t>(output)])];
         if (speaker.role == SpeakerRole::LFE)
             continue;
         if (speaker.role == SpeakerRole::mono)
@@ -469,17 +476,11 @@ const StandardAmbisonicMatrixView* AmbisonicMonitorDecoder::standardArtifactFor(
         {
             continue;
         }
-        auto matches = true;
+        std::array<SpeakerRole, RoutingMatrix::maxChannels> roles {};
         for (auto output = 0; output < artifact.outputChannels; ++output)
-        {
-            if (artifact.speakers[static_cast<std::size_t>(output)].role
-                != targetLayout.selectedRoles[static_cast<std::size_t>(output)])
-            {
-                matches = false;
-                break;
-            }
-        }
-        if (matches)
+            roles[static_cast<std::size_t>(output)] = artifact.speakers[static_cast<std::size_t>(output)].role;
+        if (std::is_permutation(targetLayout.selectedRoles.begin(), targetLayout.selectedRoles.end(),
+                                roles.begin(), roles.begin() + artifact.outputChannels))
             return &artifact;
     }
     return nullptr;

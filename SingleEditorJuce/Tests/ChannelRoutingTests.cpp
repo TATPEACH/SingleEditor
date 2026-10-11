@@ -211,7 +211,7 @@ void runOutputMeterAnalyzerTest()
                                                              * 1000.0 * static_cast<double>(sample) / sampleRate));
         block.setSample(0, sample, value); // L
         block.setSample(3, sample, value); // LFE
-        block.setSample(4, sample, value); // Lss
+        block.setSample(6, sample, value); // Lss in WAVE physical output order
     }
 
     OutputMeterSnapshot snapshot;
@@ -224,10 +224,10 @@ void runOutputMeterAnalyzerTest()
     require(snapshot.truePeakLinear[3] > 0.09f
                 && snapshot.kWeightedContributionDb[3] <= -119.0f,
             "LFE remains visible in peak metering but is excluded from standard loudness");
-    require(snapshot.kWeightedContributionDb[4]
+    require(snapshot.kWeightedContributionDb[6]
                 > snapshot.kWeightedContributionDb[0] + 1.35f,
             "side-surround K-weighted contribution carries the BS.1770 +1.5 dB weighting");
-    require(snapshot.momentaryLufs > snapshot.kWeightedContributionDb[4],
+    require(snapshot.momentaryLufs > snapshot.kWeightedContributionDb[6],
             "global momentary LUFS is the energy sum of active weighted contributions");
 }
 
@@ -845,6 +845,30 @@ void runWorkspaceModuleLayoutTest()
 
 int main()
 {
+    // WAVEFORMATEXTENSIBLE lists back speakers before side speakers. The
+    // Windows fallback sends these buffer slots directly to WASAPI; source
+    // interpretation must not compensate for a wrong physical output order.
+    for (const auto channels : { 8, 12 })
+    {
+        const auto mask = channels == 8 ? 0x63fu : 0x2d63fu;
+        const auto waveSource = ChannelLayoutCatalog::layoutForWaveChannelMask(channels, mask);
+        const auto device = ChannelLayoutCatalog::deviceDefaultLayoutForOutputChannels(channels);
+        const auto fileRouting = ChannelRouter::buildRoutingMatrix(waveSource, device, {});
+        require(near(fileRouting.gain(4, 4), 1.0f) && near(fileRouting.gain(6, 4), 0.0f),
+                "WAVE file ch5 back-left must reach Windows physical output 5, not side output 7");
+        for (int source = 0; source < channels; ++source)
+            for (int output = 0; output < channels; ++output)
+                require(near(fileRouting.gain(output, source), output == source ? 1.0f : 0.0f),
+                        "WAVE source order and Windows physical slots agree for every speaker");
+
+        ChannelLayoutState rearPing;
+        rearPing.sourceChannelCount = 1;
+        rearPing.selectedRoles = { SpeakerRole::Lsr };
+        const auto pingRouting = ChannelRouter::buildRoutingMatrix(rearPing, device, {});
+        require(near(pingRouting.gain(4, 0), fileRouting.gain(4, 4)),
+                "rear-left semantic Ping and rear-left file audio use the same physical output");
+    }
+
     const auto quad = ChannelLayoutCatalog::defaultLayoutForChannelCount(4);
     require(quad.selectedPresetId == "quad-lrlsrs", "4ch remains Quad by default");
     require(!quad.isAmbisonic, "unlabelled 4ch is not falsely detected as Ambisonics");
@@ -866,6 +890,29 @@ int main()
             "ordinary mono, stereo and multichannel layouts create zero Ambisonics stages");
     const auto foaDecoder = AmbisonicMonitorDecoder::create(foa);
     require(foaDecoder != nullptr, "explicit FOA creates the monitor decoder on demand");
+    for (const auto orientation : { AmbisonicOrientation {}, AmbisonicOrientation { 35.0f, 15.0f, -10.0f } })
+    {
+        const auto decoder = AmbisonicMonitorDecoder::create(foa, orientation);
+        require(decoder != nullptr, "speaker-order permutations retain the standard decoder");
+        for (const auto channels : { 8, 12 })
+        {
+            const auto canonical = ChannelLayoutCatalog::layoutForPresetId(channels,
+                channels == 8 ? "7.1-smpte" : "7.1.4-dolby-smpte");
+            const auto physical = ChannelLayoutCatalog::deviceDefaultLayoutForOutputChannels(channels);
+            const auto canonicalMatrix = decoder->buildRoutingMatrix(canonical, {});
+            const auto physicalMatrix = decoder->buildRoutingMatrix(physical, {});
+            for (int output = 0; output < channels; ++output)
+            {
+                const auto row = std::find(canonical.selectedRoles.begin(), canonical.selectedRoles.end(),
+                                            physical.selectedRoles[static_cast<std::size_t>(output)]);
+                require(row != canonical.selectedRoles.end(), "physical role exists on the canonical speaker bus");
+                const auto canonicalOutput = static_cast<int>(row - canonical.selectedRoles.begin());
+                for (int source = 0; source < 4; ++source)
+                    require(near(physicalMatrix.gain(output, source), canonicalMatrix.gain(canonicalOutput, source)),
+                            "Ambisonic decode keeps each speaker's coefficients when physical slots change");
+            }
+        }
+    }
     require(AmbisonicMonitorDecoder::statusFor(foa) == AmbisonicMonitorDecodeStatus::ready,
             "FOA ACN/SN3D is reported ready for monitor decode");
     const auto foaStageGraph = AmbisonicStageGraph::create(foa, {});
@@ -1162,8 +1209,8 @@ int main()
             "7.1 Film/Pro Tools source order is deterministic");
     const auto deviceSevenOne = ChannelLayoutCatalog::deviceDefaultLayoutForOutputChannels(8);
     require(deviceSevenOne.selectedPresetId == "windows-wave-7.1", "device 7.1 order ignores source-order preference");
-    require(deviceSevenOne.selectedRoles[4] == SpeakerRole::Lss, "device 7.1 ch5 is side left");
-    require(deviceSevenOne.selectedRoles[6] == SpeakerRole::Lsr, "device 7.1 ch7 is rear left");
+    require(deviceSevenOne.selectedRoles[4] == SpeakerRole::Lsr, "device WAVE 7.1 ch5 is rear left");
+    require(deviceSevenOne.selectedRoles[6] == SpeakerRole::Lss, "device WAVE 7.1 ch7 is side left");
     ChannelLayoutCatalog::setPreferredDefaultPresetId(8, {});
 
     const auto discrete = ChannelLayoutCatalog::defaultLayoutForChannelCount(10);
@@ -1209,8 +1256,8 @@ int main()
     const auto fiveOneToSevenOne = ChannelRouter::buildRoutingMatrix(fiveOne,
                                                                      ChannelLayoutCatalog::deviceDefaultLayoutForOutputChannels(8),
                                                                      ChannelPlaybackState {});
-    require(near(gainAt(fiveOneToSevenOne, 4, 4), 1.0f), "5.1 Ls routes to 7.1 side left");
-    require(near(gainAt(fiveOneToSevenOne, 5, 5), 1.0f), "5.1 Rs routes to 7.1 side right");
+    require(near(gainAt(fiveOneToSevenOne, 6, 4), 1.0f), "5.1 Ls routes to WAVE 7.1 side left");
+    require(near(gainAt(fiveOneToSevenOne, 7, 5), 1.0f), "5.1 Rs routes to WAVE 7.1 side right");
     require(near(gainAt(fiveOneToSevenOne, 0, 4), 0.0f), "5.1 Ls does not fall back to front left");
     require(near(gainAt(fiveOneToSevenOne, 1, 5), 0.0f), "5.1 Rs does not fall back to front right");
 
@@ -1261,9 +1308,9 @@ int main()
                        ChannelLayoutCatalog::deviceDefaultLayoutForOutputChannels(12), {})
                        .activeOutputChannels == 12,
             "physical matrix adapts deterministically to stereo, 5.1, and 7.1.4 devices");
-    require(physicalMatrix.routes[4].role == SpeakerRole::Lss
-                && physicalMatrix.routes[4].canonicalChannel == 4
-                && physicalMatrix.routes[4].physicalOutputChannel == 6,
+    require(physicalMatrix.routes[6].role == SpeakerRole::Lss
+                && physicalMatrix.routes[6].canonicalChannel == 6
+                && physicalMatrix.routes[6].physicalOutputChannel == 6,
             "physical matrix keeps canonical side-left separate from output 7");
     const auto filmSource = ChannelLayoutCatalog::layoutForPresetId(8, "7.1-film-protools");
     const auto physicalMatrixAfterSourceChange = ChannelRouter::buildPhysicalOutputMatrix(
@@ -1299,12 +1346,12 @@ int main()
             "7.1.4 top-front-left folds to front-left at -3 dB");
     require(near(gainAt(sevenOneFourToSevenOne, 1, 9), ChannelRouter::minusThreeDbGain()),
             "7.1.4 top-front-right folds to front-right at -3 dB");
-    require(near(gainAt(sevenOneFourToSevenOne, 6, 10), ChannelRouter::minusThreeDbGain()),
+    require(near(gainAt(sevenOneFourToSevenOne, 4, 10), ChannelRouter::minusThreeDbGain()),
             "7.1.4 top-rear-left folds to rear-left at Wwise -3 dB");
-    require(near(gainAt(sevenOneFourToSevenOne, 7, 11), ChannelRouter::minusThreeDbGain()),
+    require(near(gainAt(sevenOneFourToSevenOne, 5, 11), ChannelRouter::minusThreeDbGain()),
             "7.1.4 top-rear-right folds to rear-right at Wwise -3 dB");
     require(near(gainAt(sevenOneFourToSevenOne, 0, 10), 0.0f)
-                && near(gainAt(sevenOneFourToSevenOne, 6, 8), 0.0f),
+                && near(gainAt(sevenOneFourToSevenOne, 4, 8), 0.0f),
             "height channels do not leak between front and rear destinations");
 
     const auto sevenOneFourToFiveOne = ChannelRouter::buildRoutingMatrix(
@@ -1371,9 +1418,9 @@ int main()
     require(folded.outputChannels == 8, "7.1.4 to 7.1 output count");
     require(near(gainAt(folded, 0, 8), ChannelRouter::minusThreeDbGain()), "Ltf folds to L");
     require(near(gainAt(folded, 1, 9), ChannelRouter::minusThreeDbGain()), "Rtf folds to R");
-    require(near(gainAt(folded, 6, 10), ChannelRouter::minusThreeDbGain()),
+    require(near(gainAt(folded, 4, 10), ChannelRouter::minusThreeDbGain()),
             "Ltr folds to Lsr at Wwise -3 dB");
-    require(near(gainAt(folded, 7, 11), ChannelRouter::minusThreeDbGain()),
+    require(near(gainAt(folded, 5, 11), ChannelRouter::minusThreeDbGain()),
             "Rtr folds to Rsr at Wwise -3 dB");
 
     runAmbisonicBinauralFilterBankTest();
