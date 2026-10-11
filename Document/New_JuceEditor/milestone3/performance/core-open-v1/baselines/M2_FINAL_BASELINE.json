@@ -1,0 +1,35 @@
+{
+  "schema": "singleeditor.core-open.historical-baseline",
+  "version": 1,
+  "milestone": "M2-final",
+  "source_commit": "5bf92f56",
+  "artifact": {
+    "path_at_audit": "G:\\Codex\\SingleEditor\\portable_dist\\SingleEditor\\Single Editor.exe",
+    "bytes": 8499200,
+    "sha256": "46E3F4B2A1859ED1B796DE656896B63EA8D42F282D2CF2008F10939A8F826C63",
+    "timing_instrumentation": false,
+    "debug_artifacts": false
+  },
+  "corpus_id": "ordinary-long-wav-v1",
+  "legacy_external_window_receipt": {
+    "harness": "M2 external HWND observer",
+    "pooled_build_median_ms": 254,
+    "pooled_build_n": 12,
+    "pooled_portable_median_ms": 266,
+    "pooled_portable_n": 15,
+    "interleaved_build_portable_build_medians_ms": [256, 241, 285],
+    "historical_portable_median_ms": 233,
+    "historical_portable_range_ms": [221, 238]
+  },
+  "legacy_timing_build_receipt": {
+    "comparability": "historical context only; not directly comparable with the no-timing Release handshake",
+    "representative_steady_median_ms": {
+      "window": 226,
+      "first_waveform": 212,
+      "playable": 261,
+      "full_waveform": 266
+    }
+  },
+  "environment_note": "M2 observed identical binaries at roughly 233-522 ms external-window under different machine load. Busy or drifting runs are evidence, not candidates for normalization or cherry-picking.",
+  "continuity_rule": "The first M3-01 no-timing handshake receipt calibrates all five milestones. Historical M2 values remain immutable provenance and are never silently mixed with the new channel."
+}

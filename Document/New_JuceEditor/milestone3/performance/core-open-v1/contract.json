@@ -1,0 +1,36 @@
+{
+  "schema": "singleeditor.core-open.contract",
+  "version": 1,
+  "clock": "windows-qpc",
+  "channel": {
+    "schema": "singleeditor.core-open.shared-memory",
+    "version": 1,
+    "environment_variable": "SINGLE_EDITOR_COREOPEN_MAPPING",
+    "byte_size": 80,
+    "normal_run_cost": "one environment lookup; zero worker, timer, file log, or IPC when absent"
+  },
+  "milestones": [
+    { "id": "window", "definition": "top-level window has been made visible" },
+    { "id": "file_name", "definition": "the opened file name has entered a visible startup or editor presentation" },
+    { "id": "first_waveform", "definition": "actual source-derived waveform peaks have been painted" },
+    { "id": "playable", "definition": "a real readable source range is bound to playback" },
+    { "id": "core_ready", "definition": "max(first_waveform, playable)", "derived": true },
+    { "id": "full_waveform", "definition": "the complete peak-cache revision is available to the waveform view" }
+  ],
+  "profiles": {
+    "smoke": { "warmup_runs": 0, "steady_runs_per_artifact": 1, "gate_eligible": false },
+    "routine": { "warmup_runs": 1, "steady_runs_per_artifact": 6, "gate_eligible": true },
+    "release": { "warmup_runs": 1, "steady_runs_per_artifact": 12, "gate_eligible": true }
+  },
+  "comparison_order": "balanced alternating A/B/A-compatible order",
+  "statistics": {
+    "primary": "median",
+    "required": ["count", "median", "mad", "min", "max", "p90-nearest-rank"]
+  },
+  "classification_dimensions": ["launch_profile", "phase", "app_cache", "system_cache"],
+  "release_artifact": {
+    "timing_instrumentation": false,
+    "debug_logging": false,
+    "fixed_portable_path": "G:\\Codex\\SingleEditor\\portable_dist\\SingleEditor\\Single Editor.exe"
+  }
+}

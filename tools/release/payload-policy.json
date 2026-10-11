@@ -1,0 +1,706 @@
+{
+  "schema": "singleeditor.release-payload-policy",
+  "version": 6,
+  "source_exclusions": [
+    {
+      "source": "icons",
+      "path": "NOTICE.md",
+      "reason": "Source-side icon mapping; the complete Phosphor license and dependency index are separately included in the release payload."
+    },
+    {
+      "source": "notices",
+      "path": "source-tools/Microsoft-PDB-LICENSE.txt",
+      "reason": "Retain with the public build-side CodeView tool source; not a GUI/CLI runtime dependency."
+    },
+    {
+      "source": "notices",
+      "path": "source-tools/README.md",
+      "reason": "Source-side tool provenance index; keep in the source distribution rather than the GUI/CLI payload."
+    },
+    {
+      "source": "icons",
+      "path": "icon.png",
+      "reason": "Retained source only; shipping tray artwork is now in the window-shell owner pack."
+    },
+    {
+      "source": "icons",
+      "path": "delete.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "fade-in.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "fade-out.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "LOGO.png",
+      "reason": "Retained unused legacy artwork source; no current product consumer."
+    },
+    {
+      "source": "icons",
+      "path": "loop.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "mute.svg",
+      "reason": "Retained unused legacy artwork source; no current product consumer."
+    },
+    {
+      "source": "icons",
+      "path": "NextFrame.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "open-files.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "open-left-window.svg",
+      "reason": "Retained unused legacy artwork source; no current product consumer."
+    },
+    {
+      "source": "icons",
+      "path": "open-right-window.svg",
+      "reason": "Retained unused legacy artwork source; no current product consumer."
+    },
+    {
+      "source": "icons",
+      "path": "pause.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "play.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "PreviousFrame.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "redo.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "reset.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "save.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "Settings.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "skip-back.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "skip-forward.svg",
+      "reason": "Retained unused legacy artwork source; no current product consumer."
+    },
+    {
+      "source": "icons",
+      "path": "spectrum.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "stop.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "toggle.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "undo.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "waveform.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "zoom-in.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    },
+    {
+      "source": "icons",
+      "path": "zoom-out.svg",
+      "reason": "Retained source; approved minimal Core action SVG is embedded without geometry changes."
+    }
+  ],
+  "system_imports": [
+    "advapi32.dll",
+    "bcrypt.dll",
+    "comctl32.dll",
+    "comdlg32.dll",
+    "d2d1.dll",
+    "d3d11.dll",
+    "dcomp.dll",
+    "dwmapi.dll",
+    "dxgi.dll",
+    "gdi32.dll",
+    "imm32.dll",
+    "kernel32.dll",
+    "msvcrt.dll",
+    "ole32.dll",
+    "oleaut32.dll",
+    "shell32.dll",
+    "shlwapi.dll",
+    "user32.dll",
+    "wininet.dll",
+    "winmm.dll",
+    "ws2_32.dll",
+    "api-ms-win-core-synch-l1-2-0.dll",
+    "api-ms-win-crt-convert-l1-1-0.dll",
+    "api-ms-win-crt-environment-l1-1-0.dll",
+    "api-ms-win-crt-filesystem-l1-1-0.dll",
+    "api-ms-win-crt-heap-l1-1-0.dll",
+    "api-ms-win-crt-locale-l1-1-0.dll",
+    "api-ms-win-crt-math-l1-1-0.dll",
+    "api-ms-win-crt-runtime-l1-1-0.dll",
+    "api-ms-win-crt-stdio-l1-1-0.dll",
+    "api-ms-win-crt-string-l1-1-0.dll",
+    "api-ms-win-crt-time-l1-1-0.dll",
+    "api-ms-win-crt-utility-l1-1-0.dll"
+  ],
+  "budget_basis": "The 64 KiB Ambisonics owner pack and its independent NOTICE retain the v5 limits. The v6 compiled-dependency-notices group has a fixed 128 KiB DistributionOnly allowance for selected JUCE/ASIO and embedded Phosphor icon notices, complete GPL/AGPL texts and their source index. The separate runtime-dependency-notices group has a fixed 128 KiB allowance for the retained r2083 codec notice set and its exact archive/source index; unresolved source delivery and G719 terms remain explicit. Neither addition enlarges the existing 4 KiB license or Ambisonics notice groups. Executable/runtime, core icon and tray ceilings remain unchanged. Source-side tool notices and the icon mapping are retained outside the executable payload through explicit source exclusions. These engineering file budgets do not substitute for D171 final calibrated package/linked owner/class budgets or runtime evidence; the new notice metrics require final calibration with the selected release. Sealed older stages retain their own policy.",
+  "groups": [
+    {
+      "id": "window-shell-tray",
+      "owner": "singleeditor.window-shell",
+      "kind": "owner-resource-pack",
+      "declared_loading_policy": "PostCoreWorkspace; explicit close-to-tray and current document CoreReady; released on restore or quit",
+      "max_bytes": 262144
+    },
+    {
+      "id": "gui",
+      "owner": "application",
+      "kind": "executable",
+      "declared_loading_policy": "application entry; optional code remains governed by its runtime trigger",
+      "max_bytes": 12582912,
+      "machine": "x64",
+      "max_image_bytes": 12582912,
+      "max_direct_imports": 34
+    },
+    {
+      "id": "cli",
+      "owner": "automation",
+      "kind": "executable",
+      "declared_loading_policy": "explicit external command",
+      "max_bytes": 4194304,
+      "machine": "x64",
+      "max_image_bytes": 4194304,
+      "max_direct_imports": 22
+    },
+    {
+      "id": "branding",
+      "owner": "distribution",
+      "kind": "shell-association-icon",
+      "declared_loading_policy": "Windows shell file association; GUI action icons are independently embedded",
+      "max_bytes": 524288
+    },
+    {
+      "id": "license",
+      "owner": "distribution",
+      "kind": "license",
+      "declared_loading_policy": "disclosure only",
+      "max_bytes": 4096
+    },
+    {
+      "id": "compiled-dependency-notices",
+      "owner": "distribution",
+      "kind": "license",
+      "declared_loading_policy": "DistributionOnly; independently inspectable compiled dependency notices, complete license texts and source index",
+      "max_bytes": 131072
+    },
+    {
+      "id": "runtime-dependency-notices",
+      "owner": "distribution",
+      "kind": "license",
+      "declared_loading_policy": "DistributionOnly; retained optional-runtime dependency notices and exact archive/source index; unresolved redistribution terms remain explicit",
+      "max_bytes": 131072
+    },
+    {
+      "id": "vgmstream",
+      "owner": "packed-media",
+      "kind": "optional-runtime-pack",
+      "declared_loading_policy": "explicit packed-media decode request",
+      "max_bytes": 13631488,
+      "machine": "x86",
+      "max_image_bytes": 18874368
+    },
+    {
+      "id": "vc-runtime",
+      "owner": "distribution",
+      "kind": "application-local-runtime",
+      "declared_loading_policy": "Windows loader; required by GUI and CLI at startup",
+      "max_bytes": 1048576,
+      "machine": "x64",
+      "max_image_bytes": 1048576
+    },
+    {
+      "id": "ambisonic-binaural",
+      "owner": "singleeditor.ambisonics",
+      "kind": "owner-resource-pack",
+      "declared_loading_policy": "ModuleLazy; explicit Ambisonic binaural monitor or CLI route; active document/transport or inspection lease",
+      "max_bytes": 65536
+    },
+    {
+      "id": "ambisonic-notice",
+      "owner": "distribution",
+      "kind": "license",
+      "declared_loading_policy": "DistributionOnly; independently inspectable source and license notice",
+      "max_bytes": 4096
+    }
+  ],
+  "files": [
+    {
+      "source": "candidate",
+      "path": "resources/window-shell/tray-v1.sepack",
+      "destination": "resources/window-shell/tray-v1.sepack",
+      "physical_kinds": ["resource-pack"],
+      "group": "window-shell-tray"
+    },
+    {
+      "source": "crt",
+      "path": "msvcp140.dll",
+      "destination": "msvcp140.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vc-runtime"
+    },
+    {
+      "source": "crt",
+      "path": "msvcp140_atomic_wait.dll",
+      "destination": "msvcp140_atomic_wait.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vc-runtime"
+    },
+    {
+      "source": "crt",
+      "path": "vcruntime140.dll",
+      "destination": "vcruntime140.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vc-runtime"
+    },
+    {
+      "source": "crt",
+      "path": "vcruntime140_1.dll",
+      "destination": "vcruntime140_1.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vc-runtime"
+    },
+    {
+      "source": "notices",
+      "path": "Microsoft-VC-Runtime.md",
+      "destination": "licenses/Microsoft-VC-Runtime.md",
+      "physical_kinds": ["license"],
+      "group": "license"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/celt-0.11.0.COPYING",
+      "destination": "licenses/vgmstream-r2083/celt-0.11.0.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/celt-0.6.1.COPYING",
+      "destination": "licenses/vgmstream-r2083/celt-0.6.1.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/ffmpeg.COPYING.LGPLv2.1",
+      "destination": "licenses/vgmstream-r2083/ffmpeg.COPYING.LGPLv2.1",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/ffmpeg.COPYING.LGPLv3",
+      "destination": "licenses/vgmstream-r2083/ffmpeg.COPYING.LGPLv3",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/LibAtrac9.LICENSE",
+      "destination": "licenses/vgmstream-r2083/LibAtrac9.LICENSE",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/libogg-1.3.5.COPYING",
+      "destination": "licenses/vgmstream-r2083/libogg-1.3.5.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/libvorbis-1.3.7.COPYING",
+      "destination": "licenses/vgmstream-r2083/libvorbis-1.3.7.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/mpg123-1.31.1.COPYING",
+      "destination": "licenses/vgmstream-r2083/mpg123-1.31.1.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/opus-1.3.1.COPYING",
+      "destination": "licenses/vgmstream-r2083/opus-1.3.1.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/speex-1.2.1.COPYING",
+      "destination": "licenses/vgmstream-r2083/speex-1.2.1.COPYING",
+      "physical_kinds": [
+        "license"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/NoticeOrigins.json",
+      "destination": "licenses/vgmstream-r2083/NoticeOrigins.json",
+      "physical_kinds": [
+        "documentation"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/README.md",
+      "destination": "licenses/vgmstream-r2083/README.md",
+      "physical_kinds": [
+        "documentation"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-LICENSE.md",
+      "destination": "licenses/JUCE-8.0.12-LICENSE.md",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-FLAC.txt",
+      "destination": "licenses/JUCE-8.0.12-FLAC.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-Ogg-Vorbis.txt",
+      "destination": "licenses/JUCE-8.0.12-Ogg-Vorbis.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-libvorbis-COPYING.txt",
+      "destination": "licenses/JUCE-8.0.12-libvorbis-COPYING.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-zlib-LICENSE.txt",
+      "destination": "licenses/JUCE-8.0.12-zlib-LICENSE.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-zlib-copyright.txt",
+      "destination": "licenses/JUCE-8.0.12-zlib-copyright.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-HarfBuzz-COPYING.txt",
+      "destination": "licenses/JUCE-8.0.12-HarfBuzz-COPYING.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-libpng-LICENSE.txt",
+      "destination": "licenses/JUCE-8.0.12-libpng-LICENSE.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-SheenBidi-LICENSE.txt",
+      "destination": "licenses/JUCE-8.0.12-SheenBidi-LICENSE.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "JUCE-8.0.12-IJG-LEGAL-ISSUES.txt",
+      "destination": "licenses/JUCE-8.0.12-IJG-LEGAL-ISSUES.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "ASIO-2.3.4-LICENSE.txt",
+      "destination": "licenses/ASIO-2.3.4-LICENSE.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "GNU-GPL-3.0.txt",
+      "destination": "licenses/GNU-GPL-3.0.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "GNU-AGPL-3.0.txt",
+      "destination": "licenses/GNU-AGPL-3.0.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "Phosphor-Icons-2.1.1-LICENSE.txt",
+      "destination": "licenses/Phosphor-Icons-2.1.1-LICENSE.txt",
+      "physical_kinds": ["license"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "ThirdPartyNoticeOrigins.json",
+      "destination": "licenses/ThirdPartyNoticeOrigins.json",
+      "physical_kinds": ["documentation"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "ThirdPartyNotices.md",
+      "destination": "licenses/ThirdPartyNotices.md",
+      "physical_kinds": ["documentation"],
+      "group": "compiled-dependency-notices"
+    },
+    {
+      "source": "candidate",
+      "path": "Single Editor.exe",
+      "destination": "Single Editor.exe",
+      "physical_kinds": ["executable"],
+      "group": "gui"
+    },
+    {
+      "source": "candidate",
+      "path": "SingleEditorCLI.exe",
+      "destination": "SingleEditorCLI.exe",
+      "physical_kinds": ["executable"],
+      "group": "cli"
+    },
+    {
+      "source": "candidate",
+      "path": "Ambisonics/NOTICE.md",
+      "destination": "Ambisonics/NOTICE.md",
+      "physical_kinds": ["license"],
+      "group": "ambisonic-notice"
+    },
+    {
+      "source": "candidate",
+      "path": "resources/ambisonics/binaural-v1.sepack",
+      "destination": "resources/ambisonics/binaural-v1.sepack",
+      "physical_kinds": ["resource-pack"],
+      "group": "ambisonic-binaural"
+    },
+    {
+      "source": "candidate",
+      "path": "licenses/libsamplerate-0.2.2.txt",
+      "destination": "licenses/libsamplerate-0.2.2.txt",
+      "physical_kinds": ["license"],
+      "group": "license"
+    },
+    {
+      "source": "icons",
+      "path": "icon.ico",
+      "destination": "icon.ico",
+      "physical_kinds": ["icon"],
+      "group": "branding"
+    },
+    {
+      "source": "vgmstream",
+      "path": "avcodec-vgmstream-59.dll",
+      "destination": "VGM/vgmstream-win/avcodec-vgmstream-59.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "avformat-vgmstream-59.dll",
+      "destination": "VGM/vgmstream-win/avformat-vgmstream-59.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "avutil-vgmstream-57.dll",
+      "destination": "VGM/vgmstream-win/avutil-vgmstream-57.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "COPYING",
+      "destination": "VGM/vgmstream-win/COPYING",
+      "physical_kinds": ["license"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "in_vgmstream.dll",
+      "destination": "VGM/vgmstream-win/in_vgmstream.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libatrac9.dll",
+      "destination": "VGM/vgmstream-win/libatrac9.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libcelt-0061.dll",
+      "destination": "VGM/vgmstream-win/libcelt-0061.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libcelt-0110.dll",
+      "destination": "VGM/vgmstream-win/libcelt-0110.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libg719_decode.dll",
+      "destination": "VGM/vgmstream-win/libg719_decode.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libmpg123-0.dll",
+      "destination": "VGM/vgmstream-win/libmpg123-0.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libspeex-1.dll",
+      "destination": "VGM/vgmstream-win/libspeex-1.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "libvorbis.dll",
+      "destination": "VGM/vgmstream-win/libvorbis.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "README.md",
+      "destination": "VGM/vgmstream-win/README.md",
+      "physical_kinds": ["documentation"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "swresample-vgmstream-4.dll",
+      "destination": "VGM/vgmstream-win/swresample-vgmstream-4.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "USAGE.md",
+      "destination": "VGM/vgmstream-win/USAGE.md",
+      "physical_kinds": ["documentation"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "vgmstream-cli.exe",
+      "destination": "VGM/vgmstream-win/vgmstream-cli.exe",
+      "physical_kinds": ["executable","helper"],
+      "group": "vgmstream"
+    },
+    {
+      "source": "vgmstream",
+      "path": "xmp-vgmstream.dll",
+      "destination": "VGM/vgmstream-win/xmp-vgmstream.dll",
+      "physical_kinds": ["shared-library"],
+      "group": "vgmstream"
+    }
+  ]
+}

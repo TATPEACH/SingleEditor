@@ -1,0 +1,18 @@
+{
+  "schema": "singleeditor.owner-resource-pack",
+  "schema_version": 1,
+  "artifact_id": "singleeditor.ambisonics.binaural.v1",
+  "owner": "singleeditor.ambisonics",
+  "version": "@PROJECT_VERSION@",
+  "lifecycle": "ModuleLazy",
+  "install_path": "resources/ambisonics/binaural-v1.sepack",
+  "earliest_trigger": "explicit Binaural / HRTF selection for an Ambisonic document or explicit CLI binaural route",
+  "retention": "active document/transport or CLI inspection lease; released when consumer switches or closes",
+  "compression": "ZIP stored; exact compressed and uncompressed sizes in ZIP directory",
+  "entries": [
+    { "name": "binaural.sehrir", "kind": "audio-filter-data", "bytes": @AMBISONIC_DATA_BYTES@, "sha256": "@AMBISONIC_DATA_SHA256@" }
+  ],
+  "license_provenance": "Existing SADIE_006 DFC data; source MD5 05aaa22e2d5654cbdee5cbe83ebfb1ef; University of York; Apache-2.0; independent Ambisonics/NOTICE.md",
+  "notice_path": "Ambisonics/NOTICE.md",
+  "notice_sha256": "@AMBISONIC_NOTICE_SHA256@"
+}

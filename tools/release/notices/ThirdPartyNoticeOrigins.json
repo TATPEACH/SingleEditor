@@ -1,0 +1,257 @@
+{
+  "schema": "singleeditor.third-party-notice-origins",
+  "version": 1,
+  "scope": "Selected compiled dependencies and their notice text sources; not an overall license clearance or a license grant for Single Editor code.",
+  "providers": [
+    {
+      "id": "phosphor-icons-core",
+      "version": "2.1.1",
+      "repository_url": "https://github.com/phosphor-icons/core",
+      "commit": "2b75f3ad12b420c9504ef05df8d2564a28f8500e",
+      "use": "21 embedded Core action SVGs; exact element/path comparison except root width/height/fill; this is a verified matching revision, not a reconstructed historical download."
+    },
+    {
+      "id": "juce",
+      "version": "8.0.12",
+      "archive_url": "https://github.com/juce-framework/JUCE/archive/refs/tags/8.0.12.tar.gz",
+      "archive_sha256": "DEC1A8BAEE5AAEC4502B717A421B850E257AB7E9C2EFD03766185EC1957CF102"
+    },
+    {
+      "id": "asio",
+      "version": "2.3.4_2025-10-15",
+      "archive_url": "https://download.steinberg.net/sdk_downloads/ASIO-SDK_2.3.4_2025-10-15.zip",
+      "archive_sha256": "D5EBF0C20DD2C5F43771FD0C1418F4B361BF52434EE670097CFA6B3A335E2ECA"
+    },
+    {
+      "id": "libsamplerate",
+      "version": "0.2.2",
+      "archive_url": "https://github.com/libsndfile/libsamplerate/archive/refs/tags/0.2.2.tar.gz",
+      "archive_sha256": "16E881487F184250DEB4FCB60432D7556AB12CB58CAEA71EF23960AEC6C0405A"
+    }
+  ],
+  "entries": [
+    {
+      "provider": "phosphor-icons-core",
+      "provider_version": "2.1.1",
+      "source_relative": "LICENSE",
+      "upstream_file_url": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/LICENSE",
+      "method": "exact-file-copy",
+      "source_sha256": "B5B1F1DA112D18EA2147DECFD48DDC1BF2B5AEB6C265381579340E95B15A2BB2",
+      "source_bytes": 1071,
+      "byte_range": { "start": 0, "end_exclusive": 1071 },
+      "payload_path": "licenses/Phosphor-Icons-2.1.1-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "B5B1F1DA112D18EA2147DECFD48DDC1BF2B5AEB6C265381579340E95B15A2BB2"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "LICENSE.md",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/LICENSE.md",
+      "method": "exact-file-copy",
+      "source_sha256": "2633539BB26D244F0966FBC4DF59400EA99BDF575FA96291851C1C3FF3456146",
+      "source_bytes": 4971,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 4971
+      },
+      "payload_path": "licenses/JUCE-8.0.12-LICENSE.md",
+      "bytes": 4971,
+      "sha256": "2633539BB26D244F0966FBC4DF59400EA99BDF575FA96291851C1C3FF3456146"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_audio_formats/codecs/flac/Flac Licence.txt",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_audio_formats/codecs/flac/Flac%20Licence.txt",
+      "method": "exact-file-copy",
+      "source_sha256": "123926094AA97C30E346C23A12A453B7063C56E6C414E342DD5AE0FEA13BD77D",
+      "source_bytes": 2448,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 2448
+      },
+      "payload_path": "licenses/JUCE-8.0.12-FLAC.txt",
+      "bytes": 2448,
+      "sha256": "123926094AA97C30E346C23A12A453B7063C56E6C414E342DD5AE0FEA13BD77D"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_audio_formats/codecs/oggvorbis/Ogg Vorbis Licence.txt",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_audio_formats/codecs/oggvorbis/Ogg%20Vorbis%20Licence.txt",
+      "method": "exact-file-copy",
+      "source_sha256": "62D5CE5C59484DC99E462EC8F815BFC76F64A2E4759500C14BEAF3772A7D1181",
+      "source_bytes": 2477,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 2477
+      },
+      "payload_path": "licenses/JUCE-8.0.12-Ogg-Vorbis.txt",
+      "bytes": 2477,
+      "sha256": "62D5CE5C59484DC99E462EC8F815BFC76F64A2E4759500C14BEAF3772A7D1181"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_audio_formats/codecs/oggvorbis/libvorbis-1.3.7/COPYING",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_audio_formats/codecs/oggvorbis/libvorbis-1.3.7/COPYING",
+      "method": "exact-file-copy",
+      "source_sha256": "EC1815DB59FCD302846DF949D7424876CB2E2DC5ED1606C5FB0B36787B1CF43A",
+      "source_bytes": 1470,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 1470
+      },
+      "payload_path": "licenses/JUCE-8.0.12-libvorbis-COPYING.txt",
+      "bytes": 1470,
+      "sha256": "EC1815DB59FCD302846DF949D7424876CB2E2DC5ED1606C5FB0B36787B1CF43A"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_core/zip/zlib/LICENSE",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_core/zip/zlib/LICENSE",
+      "method": "exact-file-copy",
+      "source_sha256": "8545E90FE8D2BC6B8B8E9F4CAECD2D9215727DBD1C153C7ADEEDFBAAEA51F38B",
+      "source_bytes": 1312,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 1312
+      },
+      "payload_path": "licenses/JUCE-8.0.12-zlib-LICENSE.txt",
+      "bytes": 1312,
+      "sha256": "8545E90FE8D2BC6B8B8E9F4CAECD2D9215727DBD1C153C7ADEEDFBAAEA51F38B"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_core/zip/zlib/README",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_core/zip/zlib/README",
+      "method": "exact-byte-extract",
+      "source_sha256": "365DB9B693FDA6C66DDD97D81AE3EB17BE32C890909553973A77439D85900494",
+      "source_bytes": 5696,
+      "byte_range": {
+        "start": 4167,
+        "end_exclusive": 5696
+      },
+      "payload_path": "licenses/JUCE-8.0.12-zlib-copyright.txt",
+      "bytes": 1529,
+      "sha256": "7A68AEE2048E490C9327618042DE1BA219FBFA98E177FA36F89DF9C75650EF82"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_graphics/fonts/harfbuzz/COPYING",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_graphics/fonts/harfbuzz/COPYING",
+      "method": "exact-file-copy",
+      "source_sha256": "BA8F810F2455C2F08E2D56BB49B72F37FCF68F1F4FADE38977CFD7372050AD64",
+      "source_bytes": 1971,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 1971
+      },
+      "payload_path": "licenses/JUCE-8.0.12-HarfBuzz-COPYING.txt",
+      "bytes": 1971,
+      "sha256": "BA8F810F2455C2F08E2D56BB49B72F37FCF68F1F4FADE38977CFD7372050AD64"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_graphics/image_formats/pnglib/LICENSE",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_graphics/image_formats/pnglib/LICENSE",
+      "method": "exact-file-copy",
+      "source_sha256": "BF5E22B9DCE8464064AE17A48EA1133C3369AC9E1D80EF9E320E5219AA14EA9B",
+      "source_bytes": 5345,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 5345
+      },
+      "payload_path": "licenses/JUCE-8.0.12-libpng-LICENSE.txt",
+      "bytes": 5345,
+      "sha256": "BF5E22B9DCE8464064AE17A48EA1133C3369AC9E1D80EF9E320E5219AA14EA9B"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_graphics/unicode/sheenbidi/LICENSE",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_graphics/unicode/sheenbidi/LICENSE",
+      "method": "exact-file-copy",
+      "source_sha256": "CFC7749B96F63BD31C3C42B5C471BF756814053E847C10F3EB003417BC523D30",
+      "source_bytes": 11358,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 11358
+      },
+      "payload_path": "licenses/JUCE-8.0.12-SheenBidi-LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "CFC7749B96F63BD31C3C42B5C471BF756814053E847C10F3EB003417BC523D30"
+    },
+    {
+      "provider": "juce",
+      "provider_version": "8.0.12",
+      "source_relative": "modules/juce_graphics/image_formats/jpglib/README",
+      "upstream_file_url": "https://github.com/juce-framework/JUCE/blob/8.0.12/modules/juce_graphics/image_formats/jpglib/README",
+      "method": "exact-byte-extract",
+      "source_sha256": "8802105E93B079F950844E412DAAB05156B5EF30ACC6CBD0A59A287E6CD6CB7D",
+      "source_bytes": 19093,
+      "byte_range": {
+        "start": 4859,
+        "end_exclusive": 7477
+      },
+      "payload_path": "licenses/JUCE-8.0.12-IJG-LEGAL-ISSUES.txt",
+      "bytes": 2618,
+      "sha256": "B6B41CD784EBD5BE7B5BE1C935D4F93E5BC7B134093BB5684AD5849D593B283B"
+    },
+    {
+      "provider": "asio",
+      "provider_version": "2.3.4_2025-10-15",
+      "source_relative": "LICENSE.txt",
+      "upstream_file_url": null,
+      "method": "exact-file-copy",
+      "source_sha256": "61E56814F24B32216884B2DB0B4DCC317111A5AB354D54D19DD9FC13D71B1C7A",
+      "source_bytes": 2640,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 2640
+      },
+      "payload_path": "licenses/ASIO-2.3.4-LICENSE.txt",
+      "bytes": 2640,
+      "sha256": "61E56814F24B32216884B2DB0B4DCC317111A5AB354D54D19DD9FC13D71B1C7A"
+    },
+    {
+      "provider": "libsamplerate",
+      "provider_version": "0.2.2",
+      "source_relative": "COPYING",
+      "upstream_file_url": "https://github.com/libsndfile/libsamplerate/blob/0.2.2/COPYING",
+      "method": "exact-file-copy",
+      "source_sha256": "2C1F76CE2EFFDDDB425018405D5690C0B1AB4E6976E35296B0A6DB65C5E1A55D",
+      "source_bytes": 1334,
+      "byte_range": {
+        "start": 0,
+        "end_exclusive": 1334
+      },
+      "payload_path": "licenses/libsamplerate-0.2.2.txt",
+      "bytes": 1334,
+      "sha256": "2C1F76CE2EFFDDDB425018405D5690C0B1AB4E6976E35296B0A6DB65C5E1A55D"
+    },
+    {
+      "provider": "SPDX license-list-data",
+      "provider_version": "v3.26.0",
+      "upstream_file_url": "https://raw.githubusercontent.com/spdx/license-list-data/v3.26.0/text/GPL-3.0-only.txt",
+      "method": "exact-file-copy",
+      "payload_path": "licenses/GNU-GPL-3.0.txt",
+      "bytes": 34674,
+      "sha256": "FB981668C18A279E285FC4D83FBA1E836CC84DD4DAA73C9697D3CFD2D8ACA6E0"
+    },
+    {
+      "provider": "SPDX license-list-data",
+      "provider_version": "v3.26.0",
+      "upstream_file_url": "https://raw.githubusercontent.com/spdx/license-list-data/v3.26.0/text/AGPL-3.0-only.txt",
+      "method": "exact-file-copy",
+      "payload_path": "licenses/GNU-AGPL-3.0.txt",
+      "bytes": 34020,
+      "sha256": "D8A6CC31ABC16B6748C7A21F21611F5A1EC33F67D22CA23D7DA1C19B95496BEE"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WindowsPerformanceRecorder Version="1.0" Author="SingleEditor">
+  <Profiles>
+    <!-- Bounded 16 MiB memory collection. No kernel logger, stacks or heap setup. -->
+    <EventCollector Id="StartupEvents" Name="SingleEditor Startup Events">
+      <BufferSize Value="64"/>
+      <Buffers Value="256"/>
+    </EventCollector>
+    <!-- The runner substitutes an XML-escaped executable leaf name. Filters
+         select event-header processes; they do not prove coverage of I/O
+         issued by System or another process on the editor's behalf. -->
+    <EventProvider Id="Images" Name="22FB2CD6-0E7B-422B-A0C7-2FAD1FD0E716"
+                   Level="4" Strict="true" ProcessExeFilter="__EDITOR_EXE__">
+      <Keywords><Keyword Value="0x50"/></Keywords>
+    </EventProvider>
+    <EventProvider Id="Files" Name="EDD08927-9CC4-4E65-B970-C2560FB5C289"
+                   Level="4" Strict="true" ProcessExeFilter="__EDITOR_EXE__">
+      <Keywords><Keyword Value="0x1F0"/></Keywords>
+    </EventProvider>
+    <Profile Id="SingleEditorStartup.Verbose.Memory" Name="SingleEditorStartup"
+             Description="Filtered startup image and file event observation"
+             LoggingMode="Memory" DetailLevel="Verbose">
+      <Collectors>
+        <EventCollectorId Value="StartupEvents">
+          <EventProviders>
+            <EventProviderId Value="Images"/>
+            <EventProviderId Value="Files"/>
+          </EventProviders>
+        </EventCollectorId>
+      </Collectors>
+    </Profile>
+  </Profiles>
+</WindowsPerformanceRecorder>

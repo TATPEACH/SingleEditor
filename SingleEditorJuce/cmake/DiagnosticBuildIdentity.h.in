@@ -1,0 +1,4 @@
+#pragma once
+// Configure-time source identity; dirty work is explicitly labelled.
+#define SINGLE_EDITOR_DIAGNOSTIC_VERSION "@PROJECT_VERSION@"
+#define SINGLE_EDITOR_DIAGNOSTIC_COMMIT "@SINGLE_EDITOR_DIAGNOSTIC_COMMIT@"

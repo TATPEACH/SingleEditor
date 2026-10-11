@@ -1,0 +1,25 @@
+{
+  "schema": "singleeditor.core-open.corpus",
+  "version": 1,
+  "primary_id": "ordinary-long-wav-v1",
+  "assets": [
+    {
+      "id": "ordinary-long-wav-v1",
+      "role": "canonical-routine-and-release",
+      "relative_path_from_shared_root": "old/local-samples/\u6734\u6811 - \u5e73\u51e1\u4e4b\u8def.wav",
+      "bytes": 183823108,
+      "sha256": "D7A28D6CB878F5FAC3CE5151A1208662917AA94A50531041309DD9389941DF40",
+      "format": "wav",
+      "notes": "The M2-to-M3 continuity corpus. The bytes are external-local and are not duplicated in git."
+    },
+    {
+      "id": "ordinary-medium-wav-smoke-v1",
+      "role": "development-smoke-only",
+      "relative_path_from_shared_root": ".tmp/test_vgm.wav",
+      "bytes": 45955784,
+      "sha256": "7E46E43E2070A676F606366184DBA1D4FFABC234900366A82A47D468EEF522A1",
+      "format": "wav",
+      "notes": "Useful for handshake smoke tests; it cannot replace the canonical gate corpus."
+    }
+  ]
+}

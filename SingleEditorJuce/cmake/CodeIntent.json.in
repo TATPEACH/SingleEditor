@@ -1,0 +1,14 @@
+{
+  "schema": "singleeditor.code-intent",
+  "version": @CODE_INTENT_VERSION@,
+@CODE_INTENT_COMPILER_DATA_FIELD@@CODE_INTENT_INLINE_DEFINITION_FIELD@  "configuration": "$<CONFIG>",
+  "architecture": "@CMAKE_GENERATOR_PLATFORM@",
+  "source_root": "@CMAKE_CURRENT_SOURCE_DIR@",
+  "build_root": "@CMAKE_CURRENT_BINARY_DIR@",
+  "declaration": {"path": "CMakeLists.txt", "sha256": "@CODE_INTENT_DECLARATION_SHA256@"},
+  "generator": {"path": "cmake/SingleEditorCodeIntent.cmake", "sha256": "@CODE_INTENT_GENERATOR_SHA256@"},
+  "scope": "Explicit whole-source ownership accounts only for contributions proven to originate in that exact target/source/hash. Mixed sources use selected C++ scopes, exact named members, exact DIA class parents or exact observed free-template function names. PDB declarations require matching physical source and all overlapping aliases, without template-argument inference. Optimizer merges, section gaps and runtime lifecycle acceptance remain separate evidence.",
+  "units": [
+@CODE_INTENT_UNITS@
+  ]
+}

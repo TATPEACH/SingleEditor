@@ -1,0 +1,16 @@
+{
+  "schema": "singleeditor.owner-resource-pack",
+  "schema_version": 1,
+  "artifact_id": "singleeditor.window-shell.tray.v1",
+  "owner": "singleeditor.window-shell",
+  "version": "@PROJECT_VERSION@",
+  "lifecycle": "PostCoreWorkspace",
+  "install_path": "resources/window-shell/tray-v1.sepack",
+  "earliest_trigger": "explicit close-to-tray and current document CoreReady",
+  "retention": "tray consumer; released on restore or quit",
+  "compression": "ZIP stored; PNG already compressed; exact sizes in ZIP directory",
+  "entries": [
+    { "name": "tray-icon.png", "kind": "icon", "bytes": @TRAY_IMAGE_BYTES@, "sha256": "@TRAY_IMAGE_SHA256@" }
+  ],
+  "license_provenance": "Generated from maintainer-selected Resources/BrandMark.svg; Resources/BRAND.md, AGPL-3.0-only."
+}

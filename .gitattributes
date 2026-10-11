@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png -text
+*.ico -text
+*.ttf -text
+*.otf -text
+*.sehrir -text
+# Preserve third-party notices exactly, including upstream whitespace.
+tools/release/notices/** -text -whitespace

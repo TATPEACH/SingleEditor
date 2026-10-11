@@ -1,0 +1,14 @@
+#pragma once
+#include <cstddef>
+namespace singleeditor::windowShellResources::identity
+{
+inline constexpr auto relativePath = "resources/window-shell/tray-v1.sepack";
+inline constexpr auto artifactId = "singleeditor.window-shell.tray.v1";
+inline constexpr auto productVersion = "@PROJECT_VERSION@";
+inline constexpr auto packHash = "@TRAY_PACK_SHA256@";
+inline constexpr auto manifestHash = "@TRAY_MANIFEST_SHA256@";
+inline constexpr auto imageHash = "@TRAY_IMAGE_SHA256@";
+inline constexpr std::size_t packBytes = @TRAY_PACK_BYTES@;
+inline constexpr std::size_t manifestBytes = @TRAY_MANIFEST_BYTES@;
+inline constexpr std::size_t imageBytes = @TRAY_IMAGE_BYTES@;
+}

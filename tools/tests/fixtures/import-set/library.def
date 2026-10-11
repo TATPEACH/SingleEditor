@@ -1,0 +1,4 @@
+LIBRARY SingleEditorImportFixtureLibrary
+EXPORTS
+    NamedProbe
+    OrdinalProbe @2 NONAME

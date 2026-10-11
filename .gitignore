@@ -1,0 +1,45 @@
+# Local build outputs
+SingleEditorJuce/build/
+SingleEditorJuce/build-*/
+build/
+release_dist/
+dist_installer/
+out/
+portable_dist/
+artifacts/
+
+# Local helper files
+.git_add_python313.err
+
+# Python/pip temp folders
+.tmp/
+.venv/
+.python313/
+__pycache__/
+
+# Local assistant/tooling state
+.claude/
+.superpowers/
+.playwright-cli/
+.gitnexus/
+handoff/
+node_modules/
+output/playwright/
+tools/visual-regression/node_modules/
+
+# Local JUCE SDK cache
+JUCE_ENV/
+
+# Local runtime dependencies
+VGM/
+
+# Local staged distribution content for the JUCE build
+dist/SingleEditor/Single Editor.exe
+dist/SingleEditor/VGM/
+
+# Archived local legacy app sources
+old/
+
+# Local one-off reference exports
+stitch_single_editor_main_view/
+stitch_single_editor_main_view.zip

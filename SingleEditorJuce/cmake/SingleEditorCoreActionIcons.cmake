@@ -1,0 +1,43 @@
+# The existing approved renderer contract is the one source of the 21 small
+# ordinary editing/transport glyphs. No raster, font or professional Mag asset
+# belongs in this minimal embedded resource target.
+set(core_icon_contract "${CMAKE_CURRENT_SOURCE_DIR}/Source/UI/LookAndFeel/ModernNorthStarVisualContract.h")
+file(READ "${core_icon_contract}" core_icon_contract_text)
+string(REGEX MATCHALL "case ModernNorthStarAssetId::[A-Za-z]+: return \\{ id, \"[^\"]+\\.svg\", ModernNorthStarAssetOwner::core \\}" core_icon_rows "${core_icon_contract_text}")
+list(LENGTH core_icon_rows core_icon_count)
+if(NOT core_icon_count EQUAL 21)
+    message(FATAL_ERROR "Review the approved minimal Core action icon set before changing its membership")
+endif()
+set(SINGLE_EDITOR_CORE_ACTION_ICON_SOURCES "")
+set(RESOURCE_CORE_ACTION_ICON_DECLARATIONS "")
+set(core_icon_total 0)
+foreach(row IN LISTS core_icon_rows)
+    string(REGEX MATCH "ModernNorthStarAssetId::([A-Za-z]+):.*\"([^\"]+)\"" ignored "${row}")
+    set(icon_id "${CMAKE_MATCH_1}")
+    set(icon_name "${CMAKE_MATCH_2}")
+    get_filename_component(icon_source "${CMAKE_CURRENT_SOURCE_DIR}/../icons/${icon_name}" ABSOLUTE)
+    file(SIZE "${icon_source}" icon_bytes)
+    file(SHA256 "${icon_source}" icon_hash)
+    math(EXPR core_icon_total "${core_icon_total} + ${icon_bytes}")
+    list(APPEND SINGLE_EDITOR_CORE_ACTION_ICON_SOURCES "${icon_source}")
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${icon_source}")
+    string(APPEND RESOURCE_CORE_ACTION_ICON_DECLARATIONS
+        "    {\"id\":\"singleeditor.core-edit-ui.${icon_id}\",\"owner\":\"singleeditor.core-edit-ui\",\"lifecycle\":\"CoreEager\",\"kind\":\"vector-icon\",\"target\":\"SingleEditor\",\"producer_target\":\"SingleEditorCoreActionIcons\",\"storage\":\"juce-binary-data\",\"source\":\"${icon_source}\",\"source_sha256\":\"${icon_hash}\",\"earliest_trigger\":\"ordinary editing or transport control first paint\",\"retention\":\"minimal process image bytes; drawable preparation remains deferred to paint\",\"source_provenance\":\"existing approved basic action SVG; no geometry changes; final brand/IP review remains M3-32\"},\n")
+endforeach()
+if(core_icon_total GREATER 12288)
+    message(FATAL_ERROR "Minimal Core action icons exceed the reviewed 12 KiB source budget")
+endif()
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${core_icon_contract}")
+juce_add_binary_data(SingleEditorCoreActionIcons NAMESPACE SingleEditorCoreIconData
+    HEADER_NAME SingleEditorCoreActionIconData.h SOURCES ${SINGLE_EDITOR_CORE_ACTION_ICON_SOURCES})
+
+function(single_editor_link_core_action_icons)
+    get_property(local_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+    foreach(target IN LISTS local_targets)
+        get_target_property(sources ${target} SOURCES)
+        if("Source/UI/LookAndFeel/ModernAppleLookAndFeel.cpp" IN_LIST sources
+            OR "Source/UI/Components/ModernIconButton.cpp" IN_LIST sources)
+            target_link_libraries(${target} PRIVATE SingleEditorCoreActionIcons)
+        endif()
+    endforeach()
+endfunction()

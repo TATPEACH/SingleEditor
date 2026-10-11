@@ -1,0 +1,79 @@
+{
+  "schema": "singleeditor.resource-intent",
+  "version": 1,
+  "configuration": "$<CONFIG>",
+  "architecture": "@RESOURCE_ARCHITECTURE@",
+  "source_root": "@RESOURCE_SOURCE_ROOT@",
+  "build_root": "@RESOURCE_BUILD_ROOT@",
+  "product_version": "@RESOURCE_VERSION@",
+  "product_files": {"SingleEditor": "$<TARGET_FILE_NAME:SingleEditor>", "SingleEditorCLI": "$<TARGET_FILE_NAME:SingleEditorCLI>"},
+  "resources": [
+    {
+      "id": "singleeditor.ambisonics.binaural", "owner": "singleeditor.ambisonics",
+      "lifecycle": "ModuleLazy", "kind": "audio-filter-data", "target": "SingleEditor",
+      "consumer_targets": ["SingleEditor", "SingleEditorCLI"], "storage": "owner-lazy-pack",
+      "source": "@SINGLE_EDITOR_AMBISONIC_RESOURCE@", "source_sha256": "@AMBISONIC_DATA_SHA256@",
+      "pack_source": "@SINGLE_EDITOR_AMBISONIC_PACK@", "pack_path": "resources/ambisonics/binaural-v1.sepack",
+      "pack_sha256": "@AMBISONIC_PACK_SHA256@", "pack_bytes": @AMBISONIC_PACK_BYTES@,
+      "pack_artifact_id": "singleeditor.ambisonics.binaural.v1", "pack_schema_version": 1,
+      "manifest_sha256": "@AMBISONIC_MANIFEST_SHA256@", "entry_name": "binaural.sehrir",
+      "earliest_trigger": "explicit GUI or CLI Binaural / HRTF selection for Ambisonic audio",
+      "retention": "document/transport or explicit CLI inspection lease",
+      "required_final_storage": "owner-lazy-pack",
+      "source_provenance": "Unmodified existing SADIE_006 derived filter data; independent Ambisonics/NOTICE.md"
+    },
+@RESOURCE_CORE_ACTION_ICON_DECLARATIONS@
+    {
+      "id": "singleeditor.window-shell.native-icon",
+      "owner": "singleeditor.window-shell", "lifecycle": "CoreEager", "kind": "icon",
+      "target": "SingleEditor", "storage": "pe-icon-group",
+      "source": "@RESOURCE_NATIVE_ICON@", "source_sha256": "@RESOURCE_NATIVE_ICON_SHA256@",
+      "descriptor_source": "@RESOURCE_ICON_RC@", "descriptor_sha256": "@RESOURCE_ICON_RC_SHA256@",
+      "resource_name": "@RESOURCE_ICON_NAME@", "language": 1033,
+      "earliest_trigger": "native window and shell icon request", "retention": "process image resource",
+      "source_provenance": "Maintainer-selected waveform A; Resources/BrandMark.svg and BRAND.md, AGPL-3.0-only"
+    },
+    {
+      "id": "singleeditor.window-shell.tray-icon",
+      "owner": "singleeditor.window-shell", "lifecycle": "PostCoreWorkspace", "kind": "icon",
+      "target": "SingleEditor", "storage": "owner-lazy-pack",
+      "source": "@RESOURCE_TRAY_ICON@", "source_sha256": "@RESOURCE_TRAY_ICON_SHA256@",
+      "pack_source": "@RESOURCE_TRAY_PACK@", "pack_path": "resources/window-shell/tray-v1.sepack",
+      "pack_sha256": "@TRAY_PACK_SHA256@", "pack_bytes": @TRAY_PACK_BYTES@,
+      "pack_artifact_id": "singleeditor.window-shell.tray.v1", "pack_schema_version": 1,
+      "manifest_sha256": "@TRAY_MANIFEST_SHA256@", "entry_name": "tray-icon.png",
+      "earliest_trigger": "explicit close-to-tray action and current document CoreReady", "retention": "tray consumer; released on restore or quit",
+      "required_final_storage": "owner-lazy-pack",
+      "source_provenance": "Generated from maintainer-selected Resources/BrandMark.svg; BRAND.md, AGPL-3.0-only"
+    },
+    {
+      "id": "singleeditor.gui.version", "owner": "singleeditor.distribution", "lifecycle": "DistributionOnly", "kind": "resource",
+      "target": "SingleEditor", "storage": "pe-version", "source": "@RESOURCE_GUI_VERSION_SOURCE@",
+      "resource_name": 1, "language": 1033, "product_name": "@RESOURCE_GUI_PRODUCT_NAME@",
+      "earliest_trigger": "explicit OS/application version inspection", "retention": "process image metadata",
+      "source_provenance": "JUCE generated RC from CMake project version/company/product properties"
+    },
+    {
+      "id": "singleeditor.cli.version", "owner": "singleeditor.distribution", "lifecycle": "DistributionOnly", "kind": "resource",
+      "target": "SingleEditorCLI", "storage": "pe-version", "source": "@RESOURCE_CLI_VERSION_SOURCE@",
+      "resource_name": 1, "language": 1033, "product_name": "@RESOURCE_CLI_PRODUCT_NAME@",
+      "earliest_trigger": "explicit OS/application version inspection", "retention": "process image metadata",
+      "source_provenance": "JUCE generated RC from CMake project version/company/product properties"
+    },
+    {
+      "id": "singleeditor.gui.manifest", "owner": "singleeditor.window-shell", "lifecycle": "CoreEager", "kind": "resource",
+      "target": "SingleEditor", "storage": "pe-manifest", "resource_name": 1, "language": 1033,
+      "execution_level": "asInvoker", "ui_access": false, "common_controls_v6": true,
+      "earliest_trigger": "Windows process activation", "retention": "process activation context",
+      "source_provenance": "MSVC embedded manifest plus JUCE Windows Common Controls v6 dependency"
+    },
+    {
+      "id": "singleeditor.cli.manifest", "owner": "singleeditor.automation", "lifecycle": "CoreEager", "kind": "resource",
+      "target": "SingleEditorCLI", "storage": "pe-manifest", "resource_name": 1, "language": 1033,
+      "execution_level": "asInvoker", "ui_access": false, "common_controls_v6": false,
+      "earliest_trigger": "Windows process activation", "retention": "process activation context",
+      "source_provenance": "MSVC embedded manifest from the CLI link configuration"
+    }
+  ],
+  "scope": "GUI/CLI native resources and window-shell tray owner pack; owner budgets, other embedded arrays, loose payloads and runtime first-touch remain separate."
+}

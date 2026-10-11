@@ -1,0 +1,14 @@
+#pragma once
+#include <cstddef>
+namespace singleeditor::ambisonicResources::identity
+{
+inline constexpr auto relativePath = "resources/ambisonics/binaural-v1.sepack";
+inline constexpr auto artifactId = "singleeditor.ambisonics.binaural.v1";
+inline constexpr auto productVersion = "@PROJECT_VERSION@";
+inline constexpr auto packHash = "@AMBISONIC_PACK_SHA256@";
+inline constexpr auto manifestHash = "@AMBISONIC_MANIFEST_SHA256@";
+inline constexpr auto dataHash = "@AMBISONIC_DATA_SHA256@";
+inline constexpr std::size_t packBytes = @AMBISONIC_PACK_BYTES@;
+inline constexpr std::size_t manifestBytes = @AMBISONIC_MANIFEST_BYTES@;
+inline constexpr std::size_t dataBytes = @AMBISONIC_DATA_BYTES@;
+}

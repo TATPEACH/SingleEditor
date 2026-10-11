@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.22)
+project(AudioDiagnosticBindingTest LANGUAGES NONE)
+add_library(juce_audio_devices INTERFACE)
+target_sources(juce_audio_devices INTERFACE "${JUCE_AUDIO_TEST_ROOT}/juce_audio_devices.cpp" "${CMAKE_CURRENT_LIST_FILE}")
+include(../../SingleEditorJuceAudioDiagnostics.cmake)
+single_editor_configure_juce_audio_diagnostics()
+get_target_property(selected juce_audio_devices INTERFACE_SOURCES)
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/selected-sources.txt" "${selected}")

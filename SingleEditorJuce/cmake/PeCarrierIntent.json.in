@@ -1,0 +1,59 @@
+{
+  "schema": "singleeditor.pe-carrier-intent",
+  "version": 1,
+  "configuration": "$<CONFIG>",
+  "architecture": "@PE_CARRIER_ARCHITECTURE@",
+  "structural_policy": "windows-pe-carrier-v1",
+  "resource_metadata_policy": "unique-declared-descendants-v1",
+  "internal_resource_padding": "unclaimed",
+  "carriers": [
+    {
+      "id": "singleeditor.window-shell.pe-carrier",
+      "target": "SingleEditor",
+      "payload_path": "$<TARGET_FILE_NAME:SingleEditor>",
+      "owner": "singleeditor.window-shell",
+      "lifecycle": "CoreEager",
+      "physical_kind": "executable",
+      "capability": "windows-pe-process-carrier",
+      "activation_anchor": "singleeditor.gui.manifest",
+      "structural_classes": [
+        "pe-headers",
+        "pe-base-relocation",
+        "pe-section-file-alignment",
+        "pe-image-section-alignment",
+        "pe-resource-root-directory-header"
+      ],
+      "earliest_trigger": "Windows process activation and image mapping; base relocation only when required before application entry",
+      "expected_runtime_state": "Present in the shipping image; activation metadata may be read before application entry; no child capability is activated by this declaration",
+      "retention": "OS-managed image layout for the process; discardable relocation metadata may be released by the loader",
+      "source_provenance": "Captured target link output and toolchain, with actual link inputs, embedded resource declarations and any recorded same-link finalization",
+      "license_provenance": "Generated executable structure under the recorded compiler/linker toolchain; referenced runtime and resource licenses remain independently declared",
+      "dependency_zone": "windows-process-activation",
+      "budget_zone": "existing-target-owner-CoreEager; carrier contribution reported separately without a new budget exemption"
+    },
+    {
+      "id": "singleeditor.automation.pe-carrier",
+      "target": "SingleEditorCLI",
+      "payload_path": "$<TARGET_FILE_NAME:SingleEditorCLI>",
+      "owner": "singleeditor.automation",
+      "lifecycle": "CoreEager",
+      "physical_kind": "executable",
+      "capability": "windows-pe-process-carrier",
+      "activation_anchor": "singleeditor.cli.manifest",
+      "structural_classes": [
+        "pe-headers",
+        "pe-base-relocation",
+        "pe-section-file-alignment",
+        "pe-image-section-alignment",
+        "pe-resource-root-directory-header"
+      ],
+      "earliest_trigger": "Windows process activation and image mapping; base relocation only when required before application entry",
+      "expected_runtime_state": "Present in the shipping image; activation metadata may be read before application entry; no child capability is activated by this declaration",
+      "retention": "OS-managed image layout for the process; discardable relocation metadata may be released by the loader",
+      "source_provenance": "Captured target link output and toolchain, with actual link inputs, embedded resource declarations and any recorded same-link finalization",
+      "license_provenance": "Generated executable structure under the recorded compiler/linker toolchain; referenced runtime and resource licenses remain independently declared",
+      "dependency_zone": "windows-process-activation",
+      "budget_zone": "existing-target-owner-CoreEager; carrier contribution reported separately without a new budget exemption"
+    }
+  ]
+}

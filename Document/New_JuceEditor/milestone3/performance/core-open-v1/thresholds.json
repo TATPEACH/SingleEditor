@@ -1,0 +1,27 @@
+{
+  "schema": "singleeditor.core-open.thresholds",
+  "version": 1,
+  "relative_gate": {
+    "warn_percent": 5.0,
+    "regression_percent": 10.0,
+    "minimum_practical_delta_ms": 20.0,
+    "rule": "A stable candidate is a regression only when both percent and practical delta limits are exceeded."
+  },
+  "absolute_ceiling_ms": {
+    "window": 600,
+    "file_name": 650,
+    "first_waveform": 700,
+    "playable": 900,
+    "core_ready": 900,
+    "full_waveform": 1200
+  },
+  "environment_gate": {
+    "max_pre_run_cpu_median_percent": 30.0,
+    "max_single_pre_run_cpu_percent": 60.0,
+    "min_available_memory_percent": 10.0,
+    "max_control_half_drift_percent": 10.0,
+    "minimum_practical_drift_ms": 20.0,
+    "max_core_ready_mad_ratio": 0.15
+  },
+  "policy": "Threshold changes require a version bump and an explicit product decision; the harness never widens them automatically."
+}
