@@ -1,0 +1,28 @@
+Single Editor uses libraries from the FFmpeg project through its optional
+vgmstream helper: FFmpeg n5.1.2, licensed under LGPL version 2.1 or later.
+The selected FFmpeg libraries also contain Opus 1.3.1 under its own license.
+
+License texts and source/build details are included at:
+  licenses/vgmstream-r2083/ffmpeg.COPYING.LGPLv2.1
+  licenses/vgmstream-r2083/ffmpeg.COPYING.LGPLv3
+  licenses/vgmstream-r2083/opus-1.3.1.COPYING
+  licenses/vgmstream-r2083/FFMPEG_BUILDING.md
+  licenses/vgmstream-r2083/NoticeOrigins.json
+
+The corresponding source archives, upstream build files and applicable
+configuration/modification instructions accompany this version as:
+  SingleEditor-v0.1.0-dependency-sources.zip
+The application's own complete source accompanies it as:
+  SingleEditor-v0.1.0-source.zip
+Download both source assets from the same GitHub Release as the binary.
+Local trial releases include these source ZIPs in the release directory.
+
+The FFmpeg DLLs in VGM/vgmstream-win remain replaceable with compatible,
+modified x86 libraries. Single Editor does not restrict the modification
+or reverse engineering permitted by the LGPL for debugging such changes.
+
+FFmpeg project: https://ffmpeg.org/
+License/source delivery explanation: https://ffmpeg.org/legal.html
+
+Single Editor's own licensable code uses AGPL-3.0-only. Third-party code
+retains its respective license and copyright notices. See licenses/.

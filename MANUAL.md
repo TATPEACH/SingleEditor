@@ -342,6 +342,12 @@ Mag 是工作区中的一个功能面板，例如 Playlist、Metadata、Markers�
 
 界面显示的聚合播放延迟来自驱动报告和已知处理延迟，不是扬声器到麦克风的实测往返延迟。README 中的启动就绪时间也不是按下 Play 到听到声音的时延。
 
+### HDMI AVR 与 7.1.4
+
+读取 12 声道文件、通过 12 路声卡输出，以及经 HDMI 向 AVR 发送 Dolby Atmos，是三种不同能力。当前 SE 使用普通 Windows Audio / ASIO 后端，尚未接入 Microsoft Spatial Sound 的 Atmos 输出，也不提供 Atmos 位流直通。Windows 中开启 Dolby Atmos for home theater，不会让 SE 的普通 PCM 后端自动获得独立顶部声道输出。
+
+HDMI AVR 测试应先读取实际设备能力，使用当前可用的输出声道；不要强行将 8 路设备设为 12 路。7.1.4 PCM 文件可以用于检查文件读取和声道标签，完整的 12 路物理监听需要可用的 12 路设备后端。AVR 上混产生顶部声音，也不等于 SE 已独立发送四个顶部声道。微软区分普通 WASAPI 与空间音频对象输出，见 [Microsoft Spatial Sound](https://learn.microsoft.com/en-us/windows/win32/coreaudio/spatial-sound)。
+
 ## WEM、BNK 与视频中的音频
 
 ### WEM

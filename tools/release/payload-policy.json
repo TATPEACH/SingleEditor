@@ -413,6 +413,24 @@
     },
     {
       "source": "notices",
+      "path": "FFMPEG_NOTICE.txt",
+      "destination": "FFMPEG_NOTICE.txt",
+      "physical_kinds": [
+        "documentation"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
+      "path": "vgmstream-r2083/FFMPEG_BUILDING.md",
+      "destination": "licenses/vgmstream-r2083/FFMPEG_BUILDING.md",
+      "physical_kinds": [
+        "documentation"
+      ],
+      "group": "runtime-dependency-notices"
+    },
+    {
+      "source": "notices",
       "path": "vgmstream-r2083/NoticeOrigins.json",
       "destination": "licenses/vgmstream-r2083/NoticeOrigins.json",
       "physical_kinds": [

@@ -7,14 +7,14 @@ SE uses the CLI only. G.719, the Winamp plugin and the XMPlay plugin are exclude
 | Dependency family | Notice files and known boundary |
 |---|---|
 | vgmstream CLI | Project COPYING accompanies the runtime. External libraries keep their own terms. |
-| FFmpeg | [LGPL2.1](ffmpeg.COPYING.LGPLv2.1), [LGPL3](ffmpeg.COPYING.LGPLv3) and [GPL3](../GNU-GPL-3.0.txt). Module metadata reports n5.1.2 and LGPL2.1-or-later. Final source/patch/build correspondence and corresponding-source delivery remain incomplete. |
-| Opus inside FFmpeg | [COPYING](opus-1.3.1.COPYING), including patent notice links. The upstream recipe declares1.3.1; actual FFmpeg configuration enables libopus. |
+| FFmpeg | [LGPL2.1](ffmpeg.COPYING.LGPLv2.1), [LGPL3](ffmpeg.COPYING.LGPLv3) and [GPL3](../GNU-GPL-3.0.txt). Module metadata reports n5.1.2 and LGPL2.1-or-later. Matching source, actual configuration and applicable modification/build steps are provided; see [FFmpeg source delivery](FFMPEG_BUILDING.md). |
+| Opus inside FFmpeg | [COPYING](opus-1.3.1.COPYING), including patent notice links. Actual avcodec includes the libopus1.3.1 version string; matching original source and static-build instructions are included. |
 | Combined Vorbis/Ogg | [Vorbis](libvorbis-1.3.7.COPYING) and [Ogg](libogg-1.3.5.COPYING). Both notices are preserved. |
 | mpg123 | [Official 1.31.0 source COPYING](mpg123-1.31.0.COPYING). The selected official binary and source archives are recorded in the index; the unidentified historical DLL is not selected. |
 | LibAtrac9 | [MIT notice](LibAtrac9.LICENSE); declared source commit6a9e00f6c7abd74d037fd210b6670d3cdb313049. |
 | CELT0.6.1/0.11.0 | [First COPYING](celt-0.6.1.COPYING), [second COPYING](celt-0.11.0.COPYING), preserving their original three-condition BSD-style terms. |
 | Speex | [COPYING](speex-1.2.1.COPYING); declared source1.2.1. |
 
-Ten acquired source archives cover eight families, including the fixed vgmstream tree, its referenced compatibility files and mpg123 1.31.0. Acquisition alone does not prove the historical codec DLLs' complete build correspondence. The rebuilt CLI has known source and options; unchanged third-party DLLs retain the source-delivery boundaries recorded in the index.
+Ten source archives cover eight families, including the fixed vgmstream tree, its referenced build/compatibility files and mpg123 1.31.0. The complete dependency-source Release attachment also includes the three core SE build dependencies. It retains original implementation, licenses and build files together with [FFmpeg source/build instructions](FFMPEG_BUILDING.md), the observed configuration and applicable modifications. Independent byte-identical reproduction of historical DLLs is not claimed or required for this delivery.
 
-These notice copies do not alter upstream terms or grant rights to other implementations. The current package is prepared for local use; public release remains a separate decision after applicable source delivery and product checks. G.719 is no longer bundled and is not a pending feature choice.
+Co-distribute SingleEditor-v0.1.0-dependency-sources.zip and SingleEditor-v0.1.0-source.zip on the same Release as portable/setup; keep the license texts and this notice set in the binary package. The FFmpeg DLLs remain replaceable with compatible modified libraries. These notices do not alter upstream terms. Source delivery is prepared; public release still requires product acceptance and maintainer approval. G.719 is no longer bundled and is not a pending feature choice.
