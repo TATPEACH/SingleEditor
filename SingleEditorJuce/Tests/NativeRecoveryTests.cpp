@@ -750,7 +750,7 @@ private:
     bool statusVisible() const
     {
         auto* client = window->getMainComponent();
-        return client && button(*client, "Recovery status and actions") != nullptr;
+        return client && client->recoveryStatusForTesting().isNotEmpty();
     }
     bool chooseOwnedInitialProjectDirectory()
     {
@@ -785,7 +785,9 @@ private:
     void checkStatusLayout() const
     {
         auto* client = window->getMainComponent();
-        auto* status = button(*client, "Recovery status and actions");
+        auto* status = button(*client, "More");
+        check(button(*client, "Recovery status and actions") == nullptr,
+            "recovery no longer reserves a persistent footer button");
         check(status && clearOfVisibleWaveform(*client, status->getScreenBounds()),
             "recovery action does not cover the visible waveform or its navigation controls");
         check(client->getComponentAt(status->getBounds().getCentre()) == status,
@@ -794,8 +796,9 @@ private:
     void clickStatus()
     {
         auto* client = window->getMainComponent();
-        auto* status = client ? button(*client, "Recovery status and actions") : nullptr;
-        check(status != nullptr, "pending/degraded status is visible and operable"); status->triggerClick();
+        check(client && client->recoveryStatusForTesting().isNotEmpty(),
+            "pending/degraded recovery state is available to More actions");
+        client->showRecoveryActionsForTesting();
     }
     void activatePlaylistRow(int index)
     {

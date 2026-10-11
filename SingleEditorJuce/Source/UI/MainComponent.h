@@ -115,6 +115,8 @@ public:
     const recovery::RecoveryRestoreQueue* recoveryRestoreForTesting() const noexcept { return recoveryRestore.get(); }
     bool hasRecoveryCenterForTesting() const noexcept { return recoveryCenter != nullptr; }
     void showRecoveryCenterForTesting() { showRecoveryCenter(); }
+    const juce::String& recoveryStatusForTesting() const noexcept { return recoveryStatusText; }
+    void showRecoveryActionsForTesting() { showRecoveryActions(); }
     bool hasLocalDiagnosticsWindowForTesting() const noexcept { return diagnosticsWindow != nullptr; }
     std::weak_ptr<diagnostics::GuiDeviceProbe> deviceProbeForTesting() const noexcept { return deviceProbe; }
     void showLocalDiagnosticsForTesting() { showLocalDiagnostics(); }

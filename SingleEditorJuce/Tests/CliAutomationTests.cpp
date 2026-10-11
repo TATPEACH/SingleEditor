@@ -1343,7 +1343,7 @@ void runRoutingCliTests()
                        == "wave_channel_mask"
                 && static_cast<int64_t>(result["source_layout"]["wave_channel_mask"]) == 1599,
             "routing reports versioned WAV source interpretation provenance");
-    require(result["target_layout"]["order"].toString() == "L R C LFE Lss Rss Lsr Rsr",
+    require(result["target_layout"]["order"].toString() == "L R C LFE Lsr Rsr Lss Rss",
             "routing uses Windows device output order");
     require(static_cast<int>(result["output_meter"]["channel_count"]) == 8
                 && result["output_meter"]["sampling_point"].toString()
@@ -1352,17 +1352,17 @@ void runRoutingCliTests()
     require(result["output_meter"]["channels"][3]["role"].toString() == "LFE"
                 && !static_cast<bool>(result["output_meter"]["channels"][3]["included_in_global_lufs"]),
             "CLI marks LFE as visible but excluded from standard LUFS");
-    require(std::abs(static_cast<double>(result["output_meter"]["channels"][4]["position_weight"])
+    require(std::abs(static_cast<double>(result["output_meter"]["channels"][6]["position_weight"])
                      - 1.41) < 0.001,
             "CLI reports the BS.1770 side-surround position weight");
     const auto rearLeftRoute = result["routes"][4];
     require(rearLeftRoute["source_role"].toString() == "Lsr"
-                && static_cast<int>(rearLeftRoute["outputs"][0]["output_channel"]) == 7,
-            "source ch5 rear-left routes to device output 7");
+                && static_cast<int>(rearLeftRoute["outputs"][0]["output_channel"]) == 5,
+            "source ch5 rear-left routes to Windows device output 5");
     const auto sideLeftRoute = result["routes"][6];
     require(sideLeftRoute["source_role"].toString() == "Lss"
-                && static_cast<int>(sideLeftRoute["outputs"][0]["output_channel"]) == 5,
-            "source ch7 side-left routes to device output 5");
+                && static_cast<int>(sideLeftRoute["outputs"][0]["output_channel"]) == 7,
+            "source ch7 side-left routes to Windows device output 7");
     require(result["downmix_profile"].toString() == "wwise-ac3-preview-v1"
                 && static_cast<int>(result["physical_output_matrix"]["schema_version"]) == 1
                 && static_cast<int>(result["physical_output_matrix"]["active_output_channels"])
@@ -1374,28 +1374,28 @@ void runRoutingCliTests()
                 && result["silent_route_probe"]["role_pings"][4]["source_role"].toString()
                        == "Lsr"
                 && static_cast<int>(result["silent_route_probe"]["role_pings"][4]
-                                          ["outputs"][0]["physical_output_channel"]) == 7,
+                                          ["outputs"][0]["physical_output_channel"]) == 5,
             "CLI emits a deterministic silent per-role route proof");
 
     execution = executeCli(
         parseCliArguments({ "routing", "--input", temp.getFullPathName(),
                             "--output-channels", "8",
-                            "--output-map", "Lsr=5", "--output-map", "Rsr=6",
-                            "--output-map", "Lss=7", "--output-map", "Rss=8",
+                            "--output-map", "Lsr=7", "--output-map", "Rsr=8",
+                            "--output-map", "Lss=5", "--output-map", "Rss=6",
                             "--solo-channel", "5", "--json" }),
         registry);
     require(execution.exitCode == AutomationExitCode::success,
             "routing F3 output map and solo command succeeds");
     json = juce::JSON::parse(execution.stdoutText);
     const auto mappedRearLeft = json["results"][0]["routes"][4];
-    require(static_cast<int>(mappedRearLeft["outputs"][0]["output_channel"]) == 5,
-            "CLI output map patches rear-left to physical output 5");
+    require(static_cast<int>(mappedRearLeft["outputs"][0]["output_channel"]) == 7,
+            "CLI explicit output map patches rear-left to physical output 7");
     require(!static_cast<bool>(json["results"][0]["routes"][6]["routed"]),
             "CLI solo leaves non-soloed source channels silent");
     require(static_cast<bool>(json["results"][0]["output_mapping_valid"]),
             "CLI reports valid output mapping");
     require(json["results"][0]["physical_output_matrix"]["routes"][4]["role"].toString()
-                == "Lss"
+                == "Lsr"
                 && static_cast<int>(json["results"][0]["physical_output_matrix"]["routes"][4]
                                           ["physical_output_channel"]) == 7,
             "CLI physical matrix preserves canonical role while patching the device output");
@@ -1408,7 +1408,7 @@ void runRoutingCliTests()
     json = juce::JSON::parse(execution.stdoutText);
     const auto smpteRoute = json["results"][0]["routes"][4];
     require(smpteRoute["source_role"].toString() == "Lss"
-                && static_cast<int>(smpteRoute["outputs"][0]["output_channel"]) == 5,
+                && static_cast<int>(smpteRoute["outputs"][0]["output_channel"]) == 7,
             "source preset override simulates UI SMPTE selection");
     require(json["results"][0]["source_layout"]["interpretation_origin"].toString()
                 == "explicit_preset"
@@ -1436,7 +1436,7 @@ void runRoutingCliTests()
                 == "L R C LFE Lsr Rsr Lss Rss Ltf Rtf Ltr Rtr",
             "routing auto-detects WAVE 7.1.4 source order");
     require(heightResult["target_layout"]["order"].toString()
-                == "L R C LFE Lss Rss Lsr Rsr Ltf Rtf Ltr Rtr",
+                == "L R C LFE Lsr Rsr Lss Rss Ltf Rtf Ltr Rtr",
             "routing exposes the twelve-output device order");
     require(static_cast<int>(heightResult["output_meter"]["channel_count"]) == 12
                 && heightResult["output_meter"]["channels"][11]["role"].toString() == "Rtr",
@@ -1462,11 +1462,11 @@ void runRoutingCliTests()
             "routing command folds 7.1.4 into an eight-output device");
     json = juce::JSON::parse(execution.stdoutText);
     const auto foldedTopRear = json["results"][0]["routes"][10]["outputs"][0];
-    require(static_cast<int>(foldedTopRear["output_channel"]) == 7
+    require(static_cast<int>(foldedTopRear["output_channel"]) == 5
                 && std::abs(static_cast<double>(foldedTopRear["gain"]) - std::sqrt(0.5)) < 0.00001,
             "CLI reports Wwise top-rear to rear-left fold-down at -3 dB");
     const auto foldedTopRearRight = json["results"][0]["routes"][11]["outputs"][0];
-    require(static_cast<int>(foldedTopRearRight["output_channel"]) == 8
+    require(static_cast<int>(foldedTopRearRight["output_channel"]) == 6
                 && std::abs(static_cast<double>(foldedTopRearRight["gain"]) - std::sqrt(0.5)) < 0.00001,
             "CLI reports symmetric Wwise top-rear to rear-right fold-down");
     heightTemp.deleteFile();
@@ -1585,10 +1585,10 @@ void runRoutingCliTests()
     const auto binauralResult = json["results"][0];
     require(binauralResult["target_layout"]["order"].toString() == "L R"
                 && binauralResult["device_output_layout"]["order"].toString()
-                       == "L R C LFE Lss Rss Lsr Rsr",
+                       == "L R C LFE Lsr Rsr Lss Rss",
             "CLI separates the binaural decode target from the physical device layout");
     require(static_cast<int>(binauralResult["output_meter"]["channel_count"]) == 8
-                && binauralResult["output_meter"]["channels"][7]["role"].toString() == "Rsr",
+                && binauralResult["output_meter"]["channels"][7]["role"].toString() == "Rss",
             "binaural monitoring preserves all physical output meter channels");
     require(binauralResult["source_layout"]["monitor_decode_mode"].toString()
                 == "binaural_hrtf"

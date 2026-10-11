@@ -1553,28 +1553,28 @@ void runHeadlessMultichannelRoutingTest()
             "renders routed multichannel playback without an audio device");
 
     constexpr float tolerance = 0.0001f;
-    require(std::abs(rendered.getSample(6, 4) - 0.5f) < tolerance,
-            "WAVE source ch5 rear-left reaches device output 7");
-    require(std::abs(rendered.getSample(4, 6) - 0.7f) < tolerance,
-            "WAVE source ch7 side-left reaches device output 5");
-    require(std::abs(rendered.getSample(4, 4)) < tolerance
-                && std::abs(rendered.getSample(6, 6)) < tolerance,
-            "side and rear impulses do not leak into index-matched outputs");
+    require(std::abs(rendered.getSample(4, 4) - 0.5f) < tolerance,
+            "WAVE source ch5 rear-left reaches Windows device output 5");
+    require(std::abs(rendered.getSample(6, 6) - 0.7f) < tolerance,
+            "WAVE source ch7 side-left reaches Windows device output 7");
+    require(std::abs(rendered.getSample(6, 4)) < tolerance
+                && std::abs(rendered.getSample(4, 6)) < tolerance,
+            "side and rear impulses remain isolated in their Windows output slots");
 
     ChannelOutputMapping outputMapping;
-    require(outputMapping.setOutputChannel(SpeakerRole::Lsr, 4)
-                && outputMapping.setOutputChannel(SpeakerRole::Rsr, 5)
-                && outputMapping.setOutputChannel(SpeakerRole::Lss, 6)
-                && outputMapping.setOutputChannel(SpeakerRole::Rss, 7),
+    require(outputMapping.setOutputChannel(SpeakerRole::Lsr, 6)
+                && outputMapping.setOutputChannel(SpeakerRole::Rsr, 7)
+                && outputMapping.setOutputChannel(SpeakerRole::Lss, 4)
+                && outputMapping.setOutputChannel(SpeakerRole::Rss, 5),
             "creates physical side-rear output patch");
     audioEngine.setOutputMapping(outputMapping);
     rendered.clear();
     require(audioEngine.renderDocumentBlockForDiagnostics(0, rendered),
             "renders patched multichannel playback without an audio device");
-    require(std::abs(rendered.getSample(4, 4) - 0.5f) < tolerance,
-            "output patch moves semantic rear-left to physical output 5");
-    require(std::abs(rendered.getSample(6, 6) - 0.7f) < tolerance,
-            "output patch moves semantic side-left to physical output 7");
+    require(std::abs(rendered.getSample(6, 4) - 0.5f) < tolerance,
+            "explicit output patch moves rear-left to physical output 7");
+    require(std::abs(rendered.getSample(4, 6) - 0.7f) < tolerance,
+            "explicit output patch moves side-left to physical output 5");
 
     testRoot.deleteRecursively();
 }
@@ -1609,7 +1609,7 @@ void runHeadlessSevenOneFourRoutingTest()
     require(audioEngine.renderDocumentBlockForDiagnostics(0, twelveOutputs),
             "renders 7.1.4 to twelve outputs without an audio device");
     constexpr int expectedDeviceOutputByWaveSource[12] = {
-        0, 1, 2, 3, 6, 7, 4, 5, 8, 9, 10, 11
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
     };
     for (int sourceChannel = 0; sourceChannel < 12; ++sourceChannel)
     {
@@ -1626,18 +1626,18 @@ void runHeadlessSevenOneFourRoutingTest()
                           "all WAVE 7.1.4 impulses route to exactly one semantic device output");
         }
     }
-    requireSample(twelveOutputs, 6, 4, 0.25f,
-                  "WAVE rear-left source reaches semantic rear-left output 7");
-    requireSample(twelveOutputs, 4, 6, 0.35f,
-                  "WAVE side-left source reaches semantic side-left output 5");
+    requireSample(twelveOutputs, 4, 4, 0.25f,
+                  "WAVE rear-left source reaches Windows rear-left output 5");
+    requireSample(twelveOutputs, 6, 6, 0.35f,
+                  "WAVE side-left source reaches Windows side-left output 7");
     requireSample(twelveOutputs, 8, 8, 0.45f,
                   "top-front-left reaches output 9 at unity");
     requireSample(twelveOutputs, 11, 11, 0.60f,
                   "top-rear-right reaches output 12 at unity");
-    requireSample(twelveOutputs, 4, 4, 0.0f,
-                  "rear-left does not leak into index-matched side-left output");
-    requireSample(twelveOutputs, 6, 6, 0.0f,
-                  "side-left does not leak into index-matched rear-left output");
+    requireSample(twelveOutputs, 6, 4, 0.0f,
+                  "rear-left does not leak into the side-left output");
+    requireSample(twelveOutputs, 4, 6, 0.0f,
+                  "side-left does not leak into the rear-left output");
 
     juce::AudioBuffer<float> sevenOneOutputs(8, 16);
     require(audioEngine.renderDocumentBlockForDiagnostics(0, sevenOneOutputs),
@@ -1646,9 +1646,9 @@ void runHeadlessSevenOneFourRoutingTest()
                   "top-front-left folds to front-left at -3 dB");
     requireSample(sevenOneOutputs, 1, 9, 0.50f * ChannelRouter::minusThreeDbGain(),
                   "top-front-right folds to front-right at -3 dB");
-    requireSample(sevenOneOutputs, 6, 10, 0.55f * ChannelRouter::minusThreeDbGain(),
+    requireSample(sevenOneOutputs, 4, 10, 0.55f * ChannelRouter::minusThreeDbGain(),
                   "top-rear-left folds to rear-left at Wwise -3 dB");
-    requireSample(sevenOneOutputs, 7, 11, 0.60f * ChannelRouter::minusThreeDbGain(),
+    requireSample(sevenOneOutputs, 5, 11, 0.60f * ChannelRouter::minusThreeDbGain(),
                   "top-rear-right folds to rear-right at Wwise -3 dB");
 
     juce::AudioBuffer<float> fiveOneOutputs(6, 16);
