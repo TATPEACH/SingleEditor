@@ -341,7 +341,6 @@ private:
     void showRecoveryCenter();
     void pollRecovery();
     void pollRecoveryRestore();
-    juce::Rectangle<int> layoutRecoveryStatus();
     void showRecoveryActions();
     void retryRecovery();
     void continueRecoveryClose();
@@ -597,7 +596,6 @@ private:
     bool recoveryCandidateNoticeDeferred = false;
     juce::String recoveryCandidateNotice;
     juce::String recoveryRestoreNotice;
-    std::unique_ptr<juce::TextButton> recoveryStatusButton;
     juce::String recoveryStatusText;
     bool closeApplicationPending = false;
     std::vector<media::OptionalMediaOperation::Ptr> closingOptionalOperations;

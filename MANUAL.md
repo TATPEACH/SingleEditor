@@ -421,7 +421,7 @@ SE 有从 MP4、M4V、MOV、AVI、WMV、MKV、WebM 提取音频的可选路径�
 
 ### Recovery Center
 
-从 **Help → Recovery Center** 或命令面板打开。恢复用于异常中断后的工作找回，不等于每次编辑都已写入源文件。
+从 **More → Recovery Center → Open Recovery Center…**、**Help → Recovery Center** 或命令面板打开。恢复用于异常中断后的工作找回，不等于每次编辑都已写入源文件。主窗口底部不再常驻恢复状态栏；有恢复记录、保护或清理任务时，在 More 的 Recovery Center 子菜单查看状态，**Recovery Actions…** 提供重试、另存和诊断入口。
 
 1. **Refresh** 读取恢复记录，**Next page** 查看后续条目。
 2. 选择记录，点击 **Safe Inspect** 查看摘要和尝试历史；它不会开始播放或直接恢复音频。
@@ -434,7 +434,7 @@ SE 有从 MP4、M4V、MOV、AVI、WMV、MKV、WebM 提取音频的可选路径�
 
 **Storage → Refresh usage** 显示恢复存储使用情况；**Retention…** 调整非活动崩溃恢复记录的保留策略。**Review expiry…** 和 **Review Discard** 先审阅，**Discard…** 再确认丢弃恢复记录。活动记录受到保护。清理失败时按状态使用 **Retry cleanup / Resume cleanup**。
 
-恢复保护暂停、容量不足或保存冲突时，先按主窗口提示处理。需要保留的编辑应尽快另存。检查或恢复失败可用 **Export diagnostics… / Task diagnostics…** 提供对应记录。
+恢复保护暂停或容量不足时，从 More 的 Recovery Center 子菜单查看状态并处理；保存冲突按保存对话框提示处理。需要保留的编辑应尽快另存。检查或恢复失败可用 **Export diagnostics… / Task diagnostics…** 提供对应记录。
 
 ### Local Diagnostics
 

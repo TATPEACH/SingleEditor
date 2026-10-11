@@ -1267,6 +1267,17 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
         if (parametricEqButton != nullptr) add(audioMenu, *parametricEqButton);
         if (truePeakLimiterButton != nullptr) add(audioMenu, *truePeakLimiterButton);
         menu.addSubMenu("Audio", audioMenu);
+        juce::PopupMenu recoveryMenu;
+        const auto recoveryState = commandRegistry.resolve(commandIds::recoveryCenter,
+            makeCommandContext(GuiCommandSource::menu, "more-recovery-menu"));
+        recoveryMenu.addItem(1207, "Open Recovery Center...", recoveryState && recoveryState->state.enabled);
+        if (recoveryStatusText.isNotEmpty())
+        {
+            recoveryMenu.addSeparator();
+            recoveryMenu.addItem(1209, recoveryStatusText, false);
+            recoveryMenu.addItem(1208, "Recovery Actions...", recoveryService != nullptr);
+        }
+        menu.addSubMenu("Recovery Center", recoveryMenu);
         juce::PopupMenu appearanceMenu;
         constexpr int lightThemeItem = 1001, nightThemeItem = 1002;
         appearanceMenu.addItem(lightThemeItem, "Modern Glass - Light", true, !RendererVisualStyle::isNight());
@@ -1290,6 +1301,16 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
                 if (result == 1201)
                 {
                     safe->dispatchGuiCommand(commandIds::palette, GuiCommandSource::menu);
+                    return;
+                }
+                if (result == 1207)
+                {
+                    safe->dispatchGuiCommand(commandIds::recoveryCenter, GuiCommandSource::menu);
+                    return;
+                }
+                if (result == 1208)
+                {
+                    safe->showRecoveryActions();
                     return;
                 }
                 if (result >= 1202 && result <= 1204)
@@ -2620,17 +2641,6 @@ void MainComponent::pollRecoveryRestore()
     pollRecovery();
 }
 
-juce::Rectangle<int> MainComponent::layoutRecoveryStatus()
-{
-    auto content = getLocalBounds();
-    if (!recoveryStatusButton || !recoveryStatusButton->isVisible()) return content;
-    // Reserve space while a recovery action is present. An overlay would cover
-    // the Simple waveform's scrollbar, or the bottom row of a General module.
-    auto row = content.removeFromBottom(44).reduced(12, 7);
-    recoveryStatusButton->setBounds(row.removeFromLeft(juce::jmin(340, row.getWidth())));
-    return content;
-}
-
 void MainComponent::pollRecovery()
 {
     if (recoveryService && recoveryService->needsPoll()) recoveryService->poll();
@@ -2655,27 +2665,7 @@ void MainComponent::pollRecovery()
         || status.maintenance.sweep.active)
         text = "Finishing recovery cleanup...";
     if (text.isEmpty()) text = recoveryRestoreNotice.isNotEmpty() ? recoveryRestoreNotice : recoveryCandidateNotice;
-    if (text == recoveryStatusText) return;
     recoveryStatusText = text;
-    if (text.isNotEmpty() && !recoveryStatusButton)
-    {
-        recoveryStatusButton = std::make_unique<juce::TextButton>();
-        recoveryStatusButton->setName("Recovery status and actions");
-        recoveryStatusButton->onClick = [this]
-        {
-            if (recoveryStatusText == recoveryCandidateNotice || recoveryStatusText == recoveryRestoreNotice) showRecoveryCenter();
-            else showRecoveryActions();
-        };
-        addChildComponent(*recoveryStatusButton);
-    }
-    if (recoveryStatusButton)
-    {
-        recoveryStatusButton->setButtonText(text);
-        recoveryStatusButton->setTooltip(text + ". Open recovery actions.");
-        const bool visibilityChanged = recoveryStatusButton->isVisible() != text.isNotEmpty();
-        recoveryStatusButton->setVisible(text.isNotEmpty());
-        if (visibilityChanged) resized();
-    }
 }
 
 void MainComponent::retryRecovery()
@@ -3907,7 +3897,7 @@ void MainComponent::paintOverChildren(juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    auto bounds = layoutRecoveryStatus();
+    auto bounds = getLocalBounds();
     if (modernSimpleView && !deferChromeForStartup && workspaceModuleHost != nullptr)
     {
         const auto content = bounds.reduced(ModernAppleLookAndFeel::outerPadding());
