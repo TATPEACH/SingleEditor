@@ -1267,17 +1267,14 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
         if (parametricEqButton != nullptr) add(audioMenu, *parametricEqButton);
         if (truePeakLimiterButton != nullptr) add(audioMenu, *truePeakLimiterButton);
         menu.addSubMenu("Audio", audioMenu);
-        juce::PopupMenu recoveryMenu;
         const auto recoveryState = commandRegistry.resolve(commandIds::recoveryCenter,
             makeCommandContext(GuiCommandSource::menu, "more-recovery-menu"));
-        recoveryMenu.addItem(1207, "Open Recovery Center...", recoveryState && recoveryState->state.enabled);
+        menu.addItem(1207, "Recovery Center...", recoveryState && recoveryState->state.enabled);
         if (recoveryStatusText.isNotEmpty())
         {
-            recoveryMenu.addSeparator();
-            recoveryMenu.addItem(1209, recoveryStatusText, false);
-            recoveryMenu.addItem(1208, "Recovery Actions...", recoveryService != nullptr);
+            menu.addItem(1209, recoveryStatusText, false);
+            menu.addItem(1208, "Recovery Actions...", recoveryService != nullptr);
         }
-        menu.addSubMenu("Recovery Center", recoveryMenu);
         juce::PopupMenu appearanceMenu;
         constexpr int lightThemeItem = 1001, nightThemeItem = 1002;
         appearanceMenu.addItem(lightThemeItem, "Modern Glass - Light", true, !RendererVisualStyle::isNight());
