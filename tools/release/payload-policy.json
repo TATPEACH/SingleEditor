@@ -613,13 +613,6 @@
     },
     {
       "source": "vgmstream",
-      "path": "in_vgmstream.dll",
-      "destination": "VGM/vgmstream-win/in_vgmstream.dll",
-      "physical_kinds": ["shared-library"],
-      "group": "vgmstream"
-    },
-    {
-      "source": "vgmstream",
       "path": "libatrac9.dll",
       "destination": "VGM/vgmstream-win/libatrac9.dll",
       "physical_kinds": ["shared-library"],
@@ -636,13 +629,6 @@
       "source": "vgmstream",
       "path": "libcelt-0110.dll",
       "destination": "VGM/vgmstream-win/libcelt-0110.dll",
-      "physical_kinds": ["shared-library"],
-      "group": "vgmstream"
-    },
-    {
-      "source": "vgmstream",
-      "path": "libg719_decode.dll",
-      "destination": "VGM/vgmstream-win/libg719_decode.dll",
       "physical_kinds": ["shared-library"],
       "group": "vgmstream"
     },
@@ -693,13 +679,6 @@
       "path": "vgmstream-cli.exe",
       "destination": "VGM/vgmstream-win/vgmstream-cli.exe",
       "physical_kinds": ["executable","helper"],
-      "group": "vgmstream"
-    },
-    {
-      "source": "vgmstream",
-      "path": "xmp-vgmstream.dll",
-      "destination": "VGM/vgmstream-win/xmp-vgmstream.dll",
-      "physical_kinds": ["shared-library"],
       "group": "vgmstream"
     }
   ]

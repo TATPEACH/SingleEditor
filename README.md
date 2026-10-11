@@ -20,7 +20,9 @@ Single Editor 是基于 JUCE 的桌面音频编辑器，目前以 Windows 为主
 
 从 [Windows 构建指南](BUILDING.md) 开始。它记录工具链、固定依赖、完整输入要求、普通 PowerShell 下的 `/m:2` Release 构建命令，以及 GUI/CLI 产物路径。构建命令以该指南为准。
 
-构建必须包含完整产品源码、资源、CMake helpers、声明使用的 sibling icons 和 release 工具。现有源码重放工具可保留开发树中的必要文件，但生成的无 Git 副本不等同于干净 checkout；完整 clean-build 与产品对照仍需在最终选定输入上完成。
+构建必须包含完整产品源码、资源、CMake helpers、声明使用的 sibling icons 和 release 工具。2026-10-11 已完成产品仓库的真实 clean checkout、GUI/CLI Release 构建及相关文档、保存、恢复、波形检查；这不是另一台全新电脑的验证。
+
+本地试用包的 vgmstream CLI 按上游开关关闭 G.719，其余解码选项保留。BNK/WEM 仍可使用；BNSF 中 IS22（Siren 22/G.719）编码不再由该运行库解码。构建方法见 [可选运行库](BUILDING.md#optional-vgmstream-runtime)。
 
 [build_portable_release.bat](build_portable_release.bat) 是使用显式候选、依赖和身份记录的分发组装入口，不是编译入口。仅编译两个 EXE 不会得到完整 portable；运行时、第三方声明和最终分发输入需要另行准备。
 

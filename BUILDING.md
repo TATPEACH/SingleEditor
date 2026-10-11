@@ -87,3 +87,27 @@ if ($LASTEXITCODE -ne 0) { throw 'Release build failed' }
 验证干净源码时，从选定提交执行 `git clone` 到新目录，检查 `git status --porcelain` 为空，再按上面的命令配置到全新的构建目录，编译 GUI/CLI 并运行相关测试。依赖可以使用已核对的固定源码缓存；应说明是否重新下载，以及实际使用的编译器/SDK。不要复制旧生成头、对象文件或产品 EXE 来替代编译。
 
 源码内容一致、Git来源身份一致、最终 EXE逐字节相同是三个不同结果。当前 CMake会记录真实 `HEAD[-dirty]`；无 Git时为 `not-reported`。现有 `/pathmap` 主要规范构建根，迁移源码根后的字节可复现性仍需实际构建比较。准备源码副本及配置通过，不等于实际编译、运行、性能或最终 RC通过。
+
+## Optional vgmstream runtime
+
+SE launches the vgmstream CLI only for supported optional-media requests. For the local v0.1 candidate, use upstream r2083 commit `57df2e179d929532094f4e4dd42ce5395514622b` and its official Windows codec DLLs, keeping their notices. Build into a new directory with Visual Studio 2026:
+
+```powershell
+$vgmSource = (Resolve-Path '<fixed-vgmstream-source>').Path
+$vgmBuild = [IO.Path]::GetFullPath('<new-vgmstream-build>')
+cmake -S $vgmSource -B $vgmBuild -G 'Visual Studio 18 2026' -A Win32 `
+  -DUSE_G719=OFF -DUSE_G7221=ON -DUSE_MPEG=ON -DUSE_VORBIS=ON `
+  -DUSE_FFMPEG=ON "-DFFMPEG_PATH=$vgmSource/ext_includes/ffmpeg" `
+  -DUSE_ATRAC9=ON -DUSE_CELT=ON -DUSE_SPEEX=ON `
+  -DBUILD_CLI=ON -DBUILD_FB2K=OFF -DBUILD_WINAMP=OFF -DBUILD_XMPLAY=OFF `
+  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
+if ($LASTEXITCODE -ne 0) { throw 'vgmstream configure failed' }
+cmake --build $vgmBuild --config Release --target vgmstream_cli -- /m:2 /nr:false
+if ($LASTEXITCODE -ne 0) { throw 'vgmstream build failed' }
+```
+
+`FFMPEG_PATH` selects upstream's bundled Windows headers/import-library route; the codec DLLs still need to be supplied. Check the configure summary: FFmpeg and the other selected codecs must stay ON. Automatic FFmpeg discovery can otherwise turn it OFF. Static MSVC runtime avoids adding a second, x86 VC runtime to the x64 SE payload.
+
+Prepare a separate runtime directory with the official archive members except `vgmstream-cli.exe`, `libg719_decode.dll`, `in_vgmstream.dll`, and `xmp-vgmstream.dll`; add the rebuilt `cli/Release/vgmstream-cli.exe`. Preserve the original archive separately. Confirm the rebuilt CLI has no G.719 import, then verify real WEM decoding and SE BNK playback against references. Deleting the DLL without rebuilding is insufficient.
+
+This build removes BNSF IS22/Siren22/G.719 decoding. It preserves G.722.1/Siren14 and current Wwise BNK/WEM paths. Original third-party license texts and corresponding-source obligations still apply; the local-use candidate is not public-release approval.
