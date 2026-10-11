@@ -410,14 +410,14 @@
   "project_license_spdx": "AGPL-3.0-only",
   "project_license_applied": true,
   "project_license_file": "LICENSE",
-  "release_eligible": false,
+  "release_decision_scope": "This dependency source inventory does not encode overall product acceptance or maintainer approval.",
   "corresponding_source_complete": true,
   "source_delivery": {
-    "status": "prepared-for-co-distribution",
+    "status": "co-distribute-with-binaries",
     "archive": "SingleEditor-v0.1.0-dependency-sources.zip",
     "build_instructions": "FFMPEG_BUILDING.md",
-    "public_sources_hosted": false,
-    "public_release_blockers": "Product acceptance and maintainer upload approval remain separate. Publish the source archive on the same Release as the binary."
+    "public_source_location": "https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0",
+    "distribution_requirement": "Publish the complete dependency-source archive and SE source archive on the same Release as the binary."
   },
   "reference_official_runtime": {
     "release": "r2083",

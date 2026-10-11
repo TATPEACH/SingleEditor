@@ -141,7 +141,7 @@ function Export-CycleSnapshot($Process, [string]$Destination) {
     Assert-Condition ($foregroundPid -eq $Process.Id) 'Owned editor did not acquire foreground focus.'
     # Invoke the visible product route. Synthetic Ctrl+Shift+P did not produce
     # a palette in smoke-1/3; shortcut acceptance remains a separate UI gate.
-    Invoke-CycleElement (Find-CycleElement $root 'More file, edit and view commands')
+    Invoke-CycleElement (Find-CycleElement $root 'More file, edit, Mag and view commands')
     Invoke-CycleElement (Wait-CycleCondition { Find-CycleOwned $Process.Id 'Command Palette...' } 'command palette menu item')
     $search = Wait-CycleCondition { Find-CycleElement $root 'Search commands' } 'command palette search'
     Set-CycleText $search 'Local Diagnostics' $windowHandle

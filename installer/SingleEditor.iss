@@ -19,6 +19,7 @@ AppName={#MyAppName}
 AppVersion={#ReleaseVersion}
 VersionInfoVersion={#ReleaseVersion}
 AppPublisher={#MyAppPublisher}
+PrivilegesRequired=lowest
 DefaultDirName={autopf}\SingleEditor
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes

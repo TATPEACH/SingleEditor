@@ -6,7 +6,9 @@
 
 打开声音，马上播放；看一眼波形，找到需要的位置；调整增益、做一段淡入淡出，或删掉不需要的片段，再保存下来。Single Editor（SE）希望把这些日常操作放进一个轻快、直接的窗口。
 
-当前面向 **Windows x64**，正在准备 **v0.1 首次公开预览版**。本地试用包已生成，正式下载尚未发布。
+当前面向 **Windows x64**，**v0.1.0 首次公开预览版**已提供便携包和当前用户安装包。
+
+[下载 v0.1.0](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0) · [便携 ZIP](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.0/SingleEditor-v0.1.0-windows-x64-portable.zip) · [安装包](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.0/SingleEditor-v0.1.0-windows-x64-setup.exe)
 
 [操作手册](MANUAL.md) · [构建指南](BUILDING.md) · [贡献指南](CONTRIBUTING.md)
 
@@ -43,17 +45,28 @@
 
 ## 速度与体积
 
-当前本地 v0.1 试用包的测量结果：
+v0.1.0 最终包的本机测量结果：
 
 | 项目 | 结果 |
 |---|---|
 | 完整便携 ZIP | **约 9.0 MiB** |
 | 解压后的完整运行文件 | **约 20.9 MiB**，56 个文件，包含 GUI、CLI、选定解码运行库和声明 |
-| 打开音频至核心就绪 | **中位数 175 ms**；P90 191 ms，最慢 197 ms，12 次正式样本均低于 200 ms |
+| 打开音频至核心就绪 | **中位数 255 ms**；P90 271 ms，最慢 276 ms，12 次正式样本 |
 
-核心就绪指 **文件可播放且首帧有效波形已显示**。测试于 2026-10-11 在 Windows 11、i9-12900KF、约 32 GiB 内存的本机进行，使用固定设置、约 175 MiB 的 WAV、已预热的系统文件缓存及 Release 构建；每个候选先预热一次，再交错测量基线与候选各 12 次。速度数据来自本地修订 2；修订 3 只补充声明和构建说明，运行程序、资源包与解码库保持一致。体积不包含源码和依赖源码归档。
+核心就绪指 **文件可播放且首帧有效波形已显示**。测试于 2026-10-12 在 Windows 11、i9-12900KF、约 32 GiB 内存的本机进行，使用固定设置、175.3 MiB 的 WAV、已预热的系统文件缓存及 Release 构建；先预热，再交错测量基线与最终候选各 12 次。同场旧版中位数为 257 ms。前一天旧版曾测得约 198 ms，说明系统状态也会影响结果。体积不包含源码和依赖源码归档。
 
 这是特定条件下的测量，实际体验会随文件、设备驱动和系统状态变化。该时间不等于完整解码时间、首次扬声器出声时延或所有电脑的冷启动保证。
+
+### 与 Windows 自带媒体播放器打开同一文件
+
+![同一份 WAV 的实际打开过程，原速静音并排录屏](docs/media/open-comparison.gif)
+
+| 文件名与可用播放控制出现 | SE | Windows 媒体播放器 |
+|---|---|---|
+| 5 次交错打开的中位时间 | **327 ms** | **1,756 ms** |
+| 本轮最快至最慢 | 288–401 ms | 1,297–1,840 ms |
+
+这轮 SE 约提前 **1.43 秒**进入上述界面状态。两边每次都关闭后重新打开同一文件，系统文件缓存已预热；Windows 媒体播放器版本为 11.2607.16.0。这个共同的外部观察指标与上面的 CoreReady 指标不同，也不测扬声器出声。动图来自另一次独立实录，两边按打开动作对齐，保持原速；[测试方法与样本](docs/PERFORMANCE.md) 说明了范围与限制。
 
 ## 开始使用
 
@@ -71,8 +84,8 @@ SE 仍处于早期阶段，先把单文件听音、波形和编辑工作流做�
 
 - 当前分发解码器已按上游开关关闭 **G.719**；BNSF 的 **IS22（Siren 22）** 编码无法解码。**Siren 14 / G.722.1** 保留，已有 WEM/BNK 样本的读取、解码和 GUI 播放检查通过。支持容器不代表支持其中的所有编码或事件结构。
 - 视频音频提取需要另行提供可找到的 **`ffmpeg.exe`**；当前包未附带它。现有路径只处理第一条音轨，详见手册。
-- 已完成当前源码的 clean checkout Release 构建及相关保存、恢复、波形和 CLI 检查。真实听音、目标硬件与实际安装 / 卸载仍有待验收项。
-- 第三方源码和 [FFmpeg 对应源码、修改及构建说明](tools/release/notices/vgmstream-r2083/FFMPEG_BUILDING.md) 已整理，随二进制一同提供。**当前试用包仍待产品验收与公开发布确认。**
+- 已完成 clean checkout Release 构建、相关保存 / 恢复 / 波形 / 声道路由 / CLI 检查，以及当前用户安装和卸载验证。7.1 声道播放与 Ping 已在开发者设备上听音验证；其它设备仍可能存在兼容差异。
+- 第三方源码和 [FFmpeg 对应源码、修改及构建说明](tools/release/notices/vgmstream-r2083/FFMPEG_BUILDING.md) 随二进制在同一次 Release 提供。安装包与程序尚未代码签名，Windows 可能提示未知发布者；可按 Release 的 SHA256SUMS 核对下载。
 
 普通音频的打开、播放和波形始终优先。特殊格式和扩展功能的限制见手册各章。
 
@@ -86,6 +99,6 @@ SE 仍处于早期阶段，先把单文件听音、波形和编辑工作流做�
 
 SE 自有、可授权的项目代码采用 **AGPL-3.0-only**，见 [LICENSE](LICENSE)。第三方代码、适配部分、字体和素材遵守各自许可与版权声明，详见 [第三方声明](tools/release/notices/ThirdPartyNotices.md) 和 [解码运行库来源](tools/release/notices/vgmstream-r2083/README.md)。
 
-SE 通过可选 vgmstream helper 使用 **FFmpeg n5.1.2（LGPL-2.1-or-later）**。获取二进制时，请同时下载同一次 Release 的 **SingleEditor-v0.1.0-dependency-sources.zip** 和 **SingleEditor-v0.1.0-source.zip**；前者包含 FFmpeg、静态 Opus、上游构建文件及适用修改说明，后者包含 SE 完整源码和本地依赖适配。正式下载入口会随首次发布加入。
+SE 通过可选 vgmstream helper 使用 **FFmpeg n5.1.2（LGPL-2.1-or-later）**。对应源码在 [同一次 Release](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0) 的 **SingleEditor-v0.1.0-dependency-sources.zip** 和 **SingleEditor-v0.1.0-source.zip** 中提供：前者包含 FFmpeg、静态 Opus、上游构建文件及适用修改说明，后者包含 SE 完整源码和本地依赖适配。日常使用只需下载一个二进制包，源码供查阅、修改或重新构建。
 
 应用使用连续波形品牌图标，源文件与生成方法见 [品牌资源](SingleEditorJuce/Resources/BRAND.md)。工具栏图标来源见 [图标声明](icons/NOTICE.md)；随源码保留的开发及发布工具参考来源见 [源码工具声明](tools/release/notices/source-tools/README.md)。
