@@ -1,49 +1,89 @@
+<img src="SingleEditorJuce/Resources/BrandMark.svg" width="80" height="80" alt="Single Editor 波形图标">
+
 # Single Editor
 
-Single Editor 是基于 JUCE 的桌面音频编辑器，目前以 Windows 为主要开发平台。它将音频读取、播放、波形预览和基本编辑作为核心，将处理器和辅助面板组织为按需使用的模块（Mag）。
+**一个能看见波形、也能直接编辑的轻量音频播放器。**
 
-项目处于 **M3 开发中**。当前源码包含已接入的功能，正在完成工程收尾和用户、设备验收；正式下载尚未发布。
+打开声音，马上播放；看一眼波形，找到需要的位置；调整增益、做一段淡入淡出，或删掉不需要的片段，再保存下来。Single Editor（SE）希望把这些日常操作放进一个轻快、直接的窗口。
 
-## 当前代码支持
+当前面向 **Windows x64**，正在准备 **v0.1 首次公开预览版**。本地试用包已生成，正式下载尚未发布。
 
-- 普通音频打开、播放和波形显示，以及选区删除、增益/淡入淡出、保存、Undo/Redo。读取实现包含 WAV、AIFF、FLAC、Ogg Vorbis 和 MP3；实际格式能力仍受编码、文件内容和相应后端约束。
-- Light/Night 外观和 General/Simple 显示模式；General/Simple 是工作区显示方式，参数 EQ 与 True Peak Limiter 是独立的 Mag。
-- 元数据、标记、输出电平、空间能量及 Ambisonics 相关面板，按需接入工作区。
-- 自动恢复存储、Recovery Center 恢复入口和本地诊断界面。
-- 独立 CLI，包含单文件处理、批处理和诊断入口；BNK/WEM 等可选媒体路径需要相应运行时。
+[操作手册](MANUAL.md) · [构建指南](BUILDING.md) · [贡献指南](CONTRIBUTING.md)
 
-普通音频核心应先达到可显示波形、可播放的状态，可选模块保持惰性。新增模块不能把初始化成本移到普通音频打开路径上。
+## 设计哲学
 
-真实 ASIO/多声道设备、压缩媒体样本、物理 DPI/跨屏、屏幕阅读器及部分 Simple 交互仍有待验收项。最终品牌资源、安装包和 RC 也尚未完成统一验收；代码或自动检查通过不替代这些结果。
+### 打开、看见、听到
 
-## 构建与运行
+播放、波形预览和基本编辑是 SE 的核心。打开普通音频时，优先让文件可播放、首帧波形可见；扩展面板和特殊格式的处理按需启用。速度要体现在每天反复打开文件的过程中。
 
-从 [Windows 构建指南](BUILDING.md) 开始。它记录工具链、固定依赖、完整输入要求、普通 PowerShell 下的 `/m:2` Release 构建命令，以及 GUI/CLI 产物路径。构建命令以该指南为准。
+### 轻量，也留出编辑的余地
 
-构建必须包含完整产品源码、资源、CMake helpers、声明使用的 sibling icons 和 release 工具。2026-10-11 已完成产品仓库的真实 clean checkout、GUI/CLI Release 构建及相关文档、保存、恢复、波形检查；这不是另一台全新电脑的验证。
+听到一个问题，能在同一个窗口里定位并修改。SE 从单个音频文件出发，把选区、增益、淡入淡出、删除、撤销和保存做成直接的操作，让播放器也能承担常见的编辑工作。
 
-本地试用包的 vgmstream CLI 按上游开关关闭 G.719，其余解码选项保留。BNK/WEM 仍可使用；BNSF 中 IS22（Siren 22/G.719）编码不再由该运行库解码。构建方法见 [可选运行库](BUILDING.md#optional-vgmstream-runtime)。
+### 需要多少，展开多少
 
-[build_portable_release.bat](build_portable_release.bat) 是使用显式候选、依赖和身份记录的分发组装入口，不是编译入口。仅编译两个 EXE 不会得到完整 portable；运行时、第三方声明和最终分发输入需要另行准备。
+用 Simple 模式专注听音和波形，用 General 模式展开工作区。播放列表、文件信息、电平表、EQ、Limiter 等功能以 **Mag（功能面板）** 组织，按需要打开、停靠或浮动。
 
-## 代码位置
+### 编辑结果应该清楚
 
-| 路径 | 内容 |
+监听音量与写入文件的编辑分开；预览、应用和保存有明确区别。撤销、未保存提示、源文件变化检查和恢复入口，帮助你掌握正在修改哪份文件、哪些结果已经保存。
+
+## 可以做什么
+
+| 场景 | 当前能力 |
 |---|---|
-| [SingleEditorJuce/Source](SingleEditorJuce/Source/) | 音频、文档与历史、恢复、Mag、原生 UI 和 CLI |
-| [SingleEditorJuce/Tests](SingleEditorJuce/Tests/) | C++ 逻辑、文档、DSP、UI 与恢复测试 |
-| [SingleEditorJuce/Resources](SingleEditorJuce/Resources/) | 产品资源与已有第三方资源声明 |
-| [SingleEditorJuce/cmake](SingleEditorJuce/cmake/) | 项目构建辅助与构建目录内的依赖适配 |
-| [icons](icons/) | 项目声明使用的图标源文件 |
-| [tools/release](tools/release/) | 构建记录、源码重放、检查与分发工具 |
-| [tools/tests](tools/tests/) | 工具和工程边界的针对性检查 |
+| 听音频、找位置 | 播放、暂停、定位、播放列表、波形缩放、分声道或合并显示、频谱查看 |
+| 修改一个文件 | 时间选区、增益与包络、淡入淡出、删除片段、Undo / Redo |
+| 保存编辑结果 | Save、Save As、Export Audio，以及对应格式的编码选项 |
+| 进一步检查和处理 | Parametric EQ、True-Peak Limiter、输出电平、元数据和标记查看、多声道监听与输出路由 |
+| 游戏音频 | 通过可选 vgmstream 运行库读取 WEM、BNK 媒体；事件与项目关联能力受支持范围限制 |
+| 批量处理 | 独立 CLI 的分析、单文件处理、批处理与诊断入口 |
 
-## 参与与交付准备
+普通音频主要支持 **WAV、AIFF、FLAC、Ogg Vorbis、MP3**。格式能力也取决于实际编码和文件内容。完整入口、参数和操作范围见 [操作手册](MANUAL.md)。
 
-变更和问题报告请参阅 [贡献指南](CONTRIBUTING.md)。Single Editor 自有、可授权的项目代码采用 **AGPL-3.0-only**，完整文本见 [LICENSE](LICENSE)。第三方代码、适配部分、字体与素材继续遵守各自许可和版权声明。公开仓库需包含实际构建与资源生成所需的完整输入，以及适用许可证和第三方声明；正式下载还需完成分发与验收。
+## 速度与体积
 
-已整理的编译依赖声明见 [第三方声明及来源](tools/release/notices/ThirdPartyNotices.md)。其中保留各依赖原文；最终对应源码交付继续按发布准备计划完成。第三方许可优先适用于对应文件，AGPL-3.0-only 是项目自有代码的固定版本选择。
+当前本地 v0.1 试用包的测量结果：
 
-21 个嵌入式工具栏图标的固定上游版本和本地文件映射见 [图标来源](icons/NOTICE.md)。应用品牌使用已选定的连续波形，源文件及生成方法见 [品牌资源](SingleEditorJuce/Resources/BRAND.md)。
+| 项目 | 结果 |
+|---|---|
+| 完整便携 ZIP | **约 9.3 MiB** |
+| 解压后的完整运行文件 | **约 20.9 MiB**，54 个文件，包含 GUI、CLI、选定解码运行库和声明 |
+| 打开音频至核心就绪 | **中位数 175 ms**；P90 191 ms，最慢 197 ms，12 次正式样本均低于 200 ms |
 
-开发与发布工具引用的格式/算法来源另见 [源码工具声明](tools/release/notices/source-tools/README.md)。这些说明随相应工具源码保留，不代表新增产品运行时依赖。
+核心就绪指 **文件可播放且首帧有效波形已显示**。测试于 2026-10-11 在 Windows 11、i9-12900KF、约 32 GiB 内存的本机进行，使用固定设置、约 175 MiB 的 WAV、已预热的系统文件缓存及 Release 构建；每个候选先预热一次，再交错测量基线与候选各 12 次。数据对应当前本地修订 2，不包含源码和依赖源码归档。
+
+这是特定条件下的测量，实际体验会随文件、设备驱动和系统状态变化。该时间不等于完整解码时间、首次扬声器出声时延或所有电脑的冷启动保证。
+
+## 开始使用
+
+1. 将便携 ZIP **完整解压到固定目录**，运行 `Single Editor.exe`。
+2. 按 **Ctrl+O** 打开文件，或把音频拖入窗口。
+3. 按 **Space** 播放 / 暂停；单击波形定位，拖动建立选区。
+4. 调整选区增益并点击 **Apply**，或从 **More → Edit** 执行淡入、淡出、删除。
+5. 用 **Ctrl+Shift+S / Save As** 另存，或用 **Ctrl+S / Save** 保存当前可写文件。
+
+[完整操作手册](MANUAL.md) 包含鼠标手势、快捷键、保存与导出区别、布局、处理器、恢复及命令行示例。
+
+## v0.1 的边界与发布状态
+
+SE 仍处于早期阶段，先把单文件听音、波形和编辑工作流做好。多轨时间线、录音和第三方 Mag 插件加载尚未提供。
+
+- 当前分发解码器已按上游开关关闭 **G.719**；BNSF 的 **IS22（Siren 22）** 编码无法解码。**Siren 14 / G.722.1** 保留，已有 WEM/BNK 样本的读取、解码和 GUI 播放检查通过。支持容器不代表支持其中的所有编码或事件结构。
+- 视频音频提取需要另行提供可找到的 **`ffmpeg.exe`**；当前包未附带它。现有路径只处理第一条音轨，详见手册。
+- 已完成当前源码的 clean checkout Release 构建及相关保存、恢复、波形和 CLI 检查。真实听音、目标硬件与实际安装 / 卸载仍有待验收项。
+- 第三方源码归档已整理；现有 FFmpeg DLL 的对应源码、补丁和构建说明尚待闭合。**当前试用包尚未获准公开发布。**
+
+普通音频的打开、播放和波形始终优先。特殊格式和扩展功能的限制见手册各章。
+
+## 构建与参与
+
+从 [Windows 构建指南](BUILDING.md) 开始，依照其中的固定依赖和 Release 命令构建 GUI 与 CLI。`build_portable_release.bat` 用于组装分发包，完整输入和用法也见该指南。
+
+源码主要位于 [SingleEditorJuce/Source](SingleEditorJuce/Source/)，测试位于 [SingleEditorJuce/Tests](SingleEditorJuce/Tests/)。问题报告和变更约定见 [贡献指南](CONTRIBUTING.md)。
+
+## 许可证与来源
+
+SE 自有、可授权的项目代码采用 **AGPL-3.0-only**，见 [LICENSE](LICENSE)。第三方代码、适配部分、字体和素材遵守各自许可与版权声明，详见 [第三方声明](tools/release/notices/ThirdPartyNotices.md) 和 [解码运行库来源](tools/release/notices/vgmstream-r2083/README.md)。
+
+应用使用连续波形品牌图标，源文件与生成方法见 [品牌资源](SingleEditorJuce/Resources/BRAND.md)。工具栏图标来源见 [图标声明](icons/NOTICE.md)；随源码保留的开发及发布工具参考来源见 [源码工具声明](tools/release/notices/source-tools/README.md)。
