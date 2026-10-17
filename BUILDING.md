@@ -2,6 +2,8 @@
 
 本页记录 Windows GUI/CLI 的构建路径。使用完整的项目源码 checkout，依赖和生成资源按下述步骤取得。产品与交付边界见 [README](README.md)，变更及检查入口见 [贡献指南](CONTRIBUTING.md)。
 
+首次在另一台电脑接续开发，先看 [新电脑开发指南](docs/DEVELOPMENT.md)：包含 clone、任务分支、普通编译、可选 BNK/WEM 运行库和相关测试的最短路径。下文的维护者固定目录、历史计时输入和发行组装流程不是普通源码开发的前置条件。
+
 ## 本机日常使用入口
 
 把日常使用目录与构建、发布候选目录分开，并持续更新同一个日常目录。关闭所有 SE 后在用户普通 PowerShell 中运行 `tools/local/Update-LocalApp.ps1 -PayloadDirectory '<完整便携包目录>' -AppDirectory '<固定日常目录>'`；脚本核对复制文件，将当前用户的 SE 打开命令、图标和 App Paths 统一到该目录，并隐藏旧 Timing 版的“打开方式”入口。它不删除用户额外文件，也不绕过 Windows 的默认应用选择。首次选择默认应用仍通过 Windows 完成。

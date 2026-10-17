@@ -1,6 +1,6 @@
 # 参与 Single Editor 开发
 
-Single Editor 仍处于 M3 开发阶段。请围绕可观察的问题提交局部变更，并把实际验证结果与尚待用户或设备验收的部分分开说明。构建入口和工具要求统一见 [BUILDING.md](BUILDING.md)。
+Single Editor 已交付 v0.1.0 公开预览版，后续围绕可观察的问题推进局部变更，并把实际验证结果与尚待用户或设备验收的部分分开说明。新电脑从 [开发指南](docs/DEVELOPMENT.md) 开始，详细构建入口和工具要求统一见 [BUILDING.md](BUILDING.md)。
 
 ## 开始一个变更
 
@@ -42,7 +42,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Logic test build failed' }
 if ($LASTEXITCODE -ne 0) { throw 'Logic tests failed' }
 ```
 
-这里的 `$buildRoot` 沿用构建指南配置的目录。部分测试目标是显式选择构建的目标，输出位置与参数也可能不同；执行前查看对应源码入口。当前 CMake 未注册统一的 CTest 套件，不要把空的 `ctest` 结果当作项目测试通过。涉及原生 UI、音频设备或外部媒体的测试，应明确所用环境和样本。
+这里的 `$buildRoot` 沿用构建指南配置的目录，命令从仓库根执行；Logic 测试会在当前目录下查找仓库内的 Ambisonics 测试资源。部分测试目标是显式选择构建的目标，输出位置与参数也可能不同；执行前查看对应源码入口。当前 CMake 未注册统一的 CTest 套件，不要把空的 `ctest` 结果当作项目测试通过。涉及原生 UI、音频设备或外部媒体的测试，应明确所用环境和样本。
 
 工具测试先检查脚本参数。源码重放工具的独立文件夹回归可直接运行：
 

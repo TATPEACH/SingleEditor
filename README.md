@@ -10,7 +10,7 @@
 
 [下载 v0.1.0](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0) · [便携 ZIP](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.0/SingleEditor-v0.1.0-windows-x64-portable.zip) · [安装包](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.0/SingleEditor-v0.1.0-windows-x64-setup.exe)
 
-[操作手册](MANUAL.md) · [构建指南](BUILDING.md) · [贡献指南](CONTRIBUTING.md)
+[操作手册](MANUAL.md) · [新电脑开发](docs/DEVELOPMENT.md) · [构建指南](BUILDING.md) · [贡献指南](CONTRIBUTING.md)
 
 ## 设计哲学
 
