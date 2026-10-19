@@ -1,5 +1,6 @@
 #include "WaveformOverviewComponent.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 #include <cmath>
 
 namespace singleeditor
@@ -131,9 +132,12 @@ void WaveformOverviewComponent::paint(juce::Graphics& g)
     auto viewport = getViewportBounds();
     if (!viewport.isEmpty())
     {
-        g.setColour(RendererVisualStyle::accentBlue().withAlpha(0.09f));
+        // Optional skins reserve their accent for actions; the viewport stays neutral.
+        const auto frame = SkinStyle::isOriginal() ? RendererVisualStyle::accentBlue()
+                                                   : RendererVisualStyle::primaryText().withMultipliedAlpha(0.6f);
+        g.setColour(frame.withMultipliedAlpha(0.09f));
         g.fillRoundedRectangle(viewport, 3);
-        g.setColour(RendererVisualStyle::accentBlue().withAlpha(hasKeyboardFocus(false) ? 0.95f : 0.55f));
+        g.setColour(frame.withMultipliedAlpha(hasKeyboardFocus(false) ? 0.95f : 0.55f));
         g.drawRoundedRectangle(viewport.reduced(0.5f), 3, 1);
         if (viewport.getWidth() >= 14 && visibleRange.getLength() < duration * 0.999)
             for (const auto x : { viewport.getX() + 3, viewport.getRight() - 3 })

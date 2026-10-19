@@ -3,6 +3,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "UI/LookAndFeel/StartupCoreSkin.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -118,9 +119,18 @@ public:
         int width, int height, int titleSpaceX, int titleSpaceWidth, const juce::Image*, bool) override
     {
         const auto chrome = palette(modernPalette);
-        g.fillAll(chrome.background);
-        g.setColour(chrome.border.withMultipliedAlpha(0.45f));
-        g.drawHorizontalLine(height - 1, 0.0f, static_cast<float>(width));
+        if (modernPalette && !SkinStyle::isOriginal())
+        {
+            SkinStyle::paintTitleBar(g, { 0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height) },
+                                     window.getTitleBarArea().getPosition().toFloat(),
+                                     window.getLocalBounds().toFloat());
+        }
+        else
+        {
+            g.fillAll(chrome.background);
+            g.setColour(chrome.border.withMultipliedAlpha(0.45f));
+            g.drawHorizontalLine(height - 1, 0.0f, static_cast<float>(width));
+        }
         g.setColour(chrome.text.withMultipliedAlpha(window.isActiveWindow() ? 0.92f : 0.62f));
         g.setFont(juce::Font(juce::FontOptions(12.5f)));
         g.drawText(window.getName(), juce::Rectangle<int>(titleSpaceX + 8, 0,
@@ -142,8 +152,18 @@ public:
     {
         if (window.isFullScreen()) return;
         const auto chrome = palette(modernPalette);
-        g.setColour(chrome.background);
-        g.drawRect(0, 0, width, height, 3);
+        if (modernPalette && !SkinStyle::isOriginal())
+        {
+            const juce::Graphics::ScopedSaveState saved(g);
+            g.excludeClipRegion({ 3, 3, juce::jmax(0, width - 6), juce::jmax(0, height - 6) });
+            const auto frame = juce::Rectangle<float>(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height));
+            SkinStyle::paintWindowBackground(g, frame, {}, frame);
+        }
+        else
+        {
+            g.setColour(chrome.background);
+            g.drawRect(0, 0, width, height, 3);
+        }
         g.setColour(chrome.border.withMultipliedAlpha(0.55f));
         g.drawRoundedRectangle(juce::Rectangle<float>(0.5f, 0.5f,
             static_cast<float>(width) - 1, static_cast<float>(height) - 1), 6.0f, 1.0f);

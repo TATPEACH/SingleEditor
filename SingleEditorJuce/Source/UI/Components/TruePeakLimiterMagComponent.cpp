@@ -178,6 +178,8 @@ void TruePeakLimiterMagComponent::setPreviewing(bool shouldPreview)
     previewButton.setTitle(previewing ? "Stop True-Peak Limiter Preview"
                                      : "Start True-Peak Limiter Preview");
     previewButton.setToggleState(previewing, juce::dontSendNotification);
+    // Optional skins mark a Mag that is currently audible as a preview.
+    getProperties().set("skinLive", previewing);
     updateVisibilityAndLayout();
     repaint();
 }
@@ -328,10 +330,15 @@ void TruePeakLimiterMagComponent::paintModernTransferCurve(juce::Graphics& g)
 {
     if (feedbackBounds.isEmpty()) return;
     const auto area = feedbackBounds.toFloat().reduced(0.5f);
-    g.setColour(RendererVisualStyle::panelBackground());
-    g.fillRoundedRectangle(area, 8.0f);
-    g.setColour(RendererVisualStyle::borderColour().withAlpha(0.7f));
-    g.drawRoundedRectangle(area, 8.0f, 1.0f);
+    if (!SkinStyle::isOriginal())
+        SkinStyle::paintDataWell(g, area, RendererVisualStyle::componentRadius());
+    else
+    {
+        g.setColour(RendererVisualStyle::panelBackground());
+        g.fillRoundedRectangle(area, 8.0f);
+        g.setColour(RendererVisualStyle::borderColour().withAlpha(0.7f));
+        g.drawRoundedRectangle(area, 8.0f, 1.0f);
+    }
     auto content = feedbackBounds.reduced(9, 6);
     auto caption = content.removeFromTop(15);
     g.setFont(ModernTypography::font(10.0f));
@@ -368,7 +375,7 @@ void TruePeakLimiterMagComponent::paintModernTransferCurve(juce::Graphics& g)
         fill.lineTo(plot.getRight(), plot.getBottom());
         fill.lineTo(plot.getX(), plot.getBottom());
         fill.closeSubPath();
-        const auto blue = RendererVisualStyle::accentBlue();
+        const auto blue = SkinStyle::isOriginal() ? RendererVisualStyle::accentBlue() : SkinStyle::signal();
         g.setGradientFill(juce::ColourGradient(blue.withAlpha(parameters.enabled ? 0.20f : 0.07f),
             plot.getX(), plot.getY(), blue.withAlpha(0.03f), plot.getX(), plot.getBottom(), false));
         g.fillPath(fill);
@@ -380,7 +387,7 @@ void TruePeakLimiterMagComponent::paintModernTransferCurve(juce::Graphics& g)
     g.drawText("0 dB in", footer, juce::Justification::centredRight, true);
     if (metrics)
     {
-        g.setColour(RendererVisualStyle::accentBlue());
+        g.setColour(SkinStyle::isOriginal() ? RendererVisualStyle::accentBlue() : SkinStyle::signal());
         g.drawText("TP " + formatDb(feedback.inputTruePeakDbtp, " dBTP"),
             readout.removeFromTop(16), juce::Justification::centredLeft, true);
         g.setColour(RendererVisualStyle::accentOrange());

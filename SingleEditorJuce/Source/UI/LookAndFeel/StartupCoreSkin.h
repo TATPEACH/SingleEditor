@@ -2,6 +2,7 @@
 
 #include <juce_graphics/juce_graphics.h>
 #include "UI/LookAndFeel/ModernGlassTokens.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -24,7 +25,9 @@ struct StartupCoreSkin final
                      juce::Colour(0xff3fb950), juce::Colour(0xfff85149) };
 
         const auto night = theme == ModernTheme::night;
-        const auto& colours = night ? ModernGlassTokens::night : ModernGlassTokens::light;
+        // Original resolves to the Modern Glass tokens; optional skins start in
+        // their own palette so CoreReady does not change the canvas colour.
+        const auto& colours = SkinStyle::palette(night);
         return { juce::Colour(colours.background), juce::Colour(colours.surface), juce::Colour(colours.control),
                  juce::Colour(colours.text), juce::Colour(colours.secondaryText), juce::Colour(colours.waveform[0]),
                  juce::Colour(night ? 0xff3fb950 : 0xff218144),

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 #include "ModernTypography.h"
 
 namespace singleeditor
@@ -13,6 +14,11 @@ struct ModernPanelPainter final
     static void paint(juce::Graphics& g, juce::Rectangle<int> bounds,
                       const juce::String& title, Icon icon, int trailingControls = 0)
     {
+        if (!SkinStyle::isOriginal())
+        {
+            SkinStyle::paintPanel(g, bounds, title, static_cast<int>(icon), trailingControls);
+            return;
+        }
         const auto body = bounds.toFloat().reduced(0.5f);
         g.setColour(RendererVisualStyle::panelBackground());
         g.fillRoundedRectangle(body, 10.0f);
@@ -22,6 +28,16 @@ struct ModernPanelPainter final
         const auto glyph = juce::Rectangle<float>(static_cast<float>(header.getX() + 10),
             static_cast<float>(header.getCentreY() - 6), 12, 12);
         g.setColour(RendererVisualStyle::accentBlue());
+        paintIcon(g, glyph, icon);
+        g.setColour(RendererVisualStyle::primaryText());
+        g.setFont(ModernTypography::font(13.0f, juce::Font::bold));
+        g.drawText(title, header.withTrimmedLeft(30).withTrimmedRight(30 + trailingControls),
+                   juce::Justification::centredLeft, true);
+    }
+
+    // Draws the 12 px header glyph in the current colour.
+    static void paintIcon(juce::Graphics& g, juce::Rectangle<float> glyph, Icon icon)
+    {
         if (icon == Icon::waveform)
         {
             juce::Path line;
@@ -80,10 +96,6 @@ struct ModernPanelPainter final
                 g.drawLine(glyph.getX() + 5, y, glyph.getRight() - 2, y, 1.0f);
             }
         }
-        g.setColour(RendererVisualStyle::primaryText());
-        g.setFont(ModernTypography::font(13.0f, juce::Font::bold));
-        g.drawText(title, header.withTrimmedLeft(30).withTrimmedRight(30 + trailingControls),
-                   juce::Justification::centredLeft, true);
     }
 };
 } // namespace singleeditor

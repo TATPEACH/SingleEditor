@@ -614,6 +614,8 @@ void ParametricEqMagComponent::setPreviewing(bool shouldPreview)
     previewButton.setTitle(previewing ? "Stop Parametric EQ Preview"
                                      : "Start Parametric EQ Preview");
     previewButton.setToggleState(previewing, juce::dontSendNotification);
+    // Optional skins mark a Mag that is currently audible as a preview.
+    getProperties().set("skinLive", previewing);
     repaint();
 }
 
@@ -841,8 +843,13 @@ void ParametricEqMagComponent::paintCurve(juce::Graphics& g) const
     auto area = curveBounds.toFloat();
     if (!RendererVisualStyle::isClassic())
     {
-        g.setColour(RendererVisualStyle::panelBackground());
-        g.fillRoundedRectangle(area, RendererVisualStyle::componentRadius());
+        if (!SkinStyle::isOriginal())
+            SkinStyle::paintDataWell(g, area, RendererVisualStyle::componentRadius());
+        else
+        {
+            g.setColour(RendererVisualStyle::panelBackground());
+            g.fillRoundedRectangle(area, RendererVisualStyle::componentRadius());
+        }
         area = area.withTrimmedLeft(30).withTrimmedRight(8).withTrimmedTop(8).withTrimmedBottom(22);
         if (area.getHeight() < 12 || area.getWidth() < 32) return;
         g.setFont(ModernTypography::font(9.5f));
@@ -919,16 +926,18 @@ void ParametricEqMagComponent::paintCurve(juce::Graphics& g) const
         }
     }
     const auto path = makePath(exactMagnitudeDb);
-    g.setColour(RendererVisualStyle::accentBlue());
+    // Optional skins keep their accent for actions and draw signal in the signal colour.
+    const auto curveColour = SkinStyle::isOriginal() ? RendererVisualStyle::accentBlue() : SkinStyle::signal();
+    g.setColour(curveColour);
     if (!RendererVisualStyle::isClassic())
     {
         auto fill = path;
         fill.lineTo(area.getRight(), area.getCentreY());
         fill.lineTo(area.getX(), area.getCentreY());
         fill.closeSubPath();
-        g.setColour(RendererVisualStyle::accentBlue().withAlpha(0.08f));
+        g.setColour(curveColour.withAlpha(0.08f));
         g.fillPath(fill);
-        g.setColour(RendererVisualStyle::accentBlue());
+        g.setColour(curveColour);
     }
     g.strokePath(path, juce::PathStrokeType(2.0f));
 

@@ -8,6 +8,7 @@
 #include "UI/LookAndFeel/ModernNorthStarVisualContract.h"
 #include "UI/LookAndFeel/WindowChromeLookAndFeel.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -28,7 +29,8 @@ public:
         label.getProperties().set("modernLabelRole", static_cast<int>(role));
         label.setColour(juce::Label::textColourId,
             role == LabelRole::secondary ? RendererVisualStyle::secondaryText()
-            : role == LabelRole::accent ? RendererVisualStyle::accentBlue() : RendererVisualStyle::primaryText());
+            : role == LabelRole::accent ? (SkinStyle::isOriginal() ? RendererVisualStyle::accentBlue() : SkinStyle::signal())
+            : RendererVisualStyle::primaryText());
     }
     // Rebind an existing component tree after changing the selected theme.
     // Does not rebuild modules, reload audio, or move/focus native windows.

@@ -22,6 +22,7 @@ public:
     static constexpr const char* rendererModeKey = "rendererMode";
     static constexpr const char* modernThemeKey = "modernGlassTheme";
     static constexpr const char* modernMaterialKey = "modernGlassMaterial";
+    static constexpr const char* modernSkinKey = "modernSkin";
     static constexpr const char* reduceMotionKey = "modernReduceMotion";
     static constexpr const char* bnkPlaybackModeKey = "bnkPlaybackMode";
     static constexpr const char* defaultWwiseProjectRootKey = "defaultWwiseProjectRoot";

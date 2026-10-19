@@ -1,6 +1,7 @@
 #include "UI/Components/MeterBridgeComponent.h"
 
 #include "UI/LookAndFeel/ModernAppleLookAndFeel.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -67,6 +68,11 @@ void MeterBridgeComponent::resetPeakHold() noexcept
 void MeterBridgeComponent::paint(juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
+    if (!SkinStyle::isOriginal() && !ModernAppleLookAndFeel::isStartupSkin())
+    {
+        SkinStyle::paintMeterBridge(g, bounds, clamp01(displayedLevel), clamp01(heldLevel));
+        return;
+    }
     g.setColour(ModernAppleLookAndFeel::mutedSurface().brighter(0.02f));
     g.fillRoundedRectangle(bounds, 12.0f);
 

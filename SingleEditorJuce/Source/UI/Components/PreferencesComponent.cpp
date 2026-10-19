@@ -7,6 +7,7 @@
 #include "UI/LookAndFeel/ModernAppleLookAndFeel.h"
 #include "UI/Renderer/RendererSelection.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -109,6 +110,9 @@ void PreferencesComponent::applyStoredVisualPreferences(juce::ApplicationPropert
         ? appProperties.getUserSettings()->getValue(modernMaterialKey, "frosted") : juce::String("frosted");
     RendererVisualStyle::setGlassMaterial(material == "solid" ? ModernGlassMaterial::solid
         : material == "liquid" ? ModernGlassMaterial::liquid : ModernGlassMaterial::frosted);
+    const auto skin = appProperties.getUserSettings() != nullptr
+        ? appProperties.getUserSettings()->getValue(modernSkinKey, "original") : juce::String("original");
+    SkinStyle::setActive(SkinStyle::parse(skin.toStdString()));
 }
 
 PreferencesComponent::PreferencesComponent(AudioEngine& audioEngineToUse,

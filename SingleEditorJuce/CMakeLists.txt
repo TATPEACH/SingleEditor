@@ -915,6 +915,12 @@ single_editor_declare_code_unit(
 set(SINGLE_EDITOR_RENDERER_STYLE_SOURCES
     Source/UI/Renderer/RendererSelection.cpp
     Source/UI/Renderer/RendererVisualStyle.cpp
+    # Optional Modern skins (More > Appearance). Each skin is one file under
+    # its label, so it can be reverted or cherry-picked on its own.
+    Source/UI/Skins/SkinStyle.cpp
+    # D  Layered Tiles
+    # A  Soft
+    # C  Liquid Glass
 )
 
 set(SINGLE_EDITOR_CLI_APPLICATION_SOURCES

@@ -5,6 +5,7 @@
 #include "ModernTypography.h"
 #include "BrandMark.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 #include "UI/Components/WaveformPlotGeometry.h"
 
 namespace singleeditor
@@ -201,6 +202,11 @@ struct ModernWaveformPainter final
     // No resampling, smoothing, synthetic envelope or replacement waveform.
     static void prepareLane(juce::Graphics& g, juce::Rectangle<float> lane, juce::Colour colour)
     {
+        if (!SkinStyle::isOriginal())
+        {
+            SkinStyle::prepareWaveformLane(g, lane, colour);
+            return;
+        }
         g.setColour(RendererVisualStyle::waveformSurface());
         g.fillRect(lane);
         g.setColour(RendererVisualStyle::borderColour().withAlpha(0.32f));

@@ -35,5 +35,7 @@ private:
     std::unique_ptr<juce::Drawable> sourceDrawable;
     std::unique_ptr<juce::Drawable> normalIcon;
     std::unique_ptr<juce::Drawable> disabledIcon;
+    // Optional skins draw a primary transport key on a filled accent.
+    std::unique_ptr<juce::Drawable> onAccentIcon;
 };
 } // namespace singleeditor

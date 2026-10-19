@@ -107,22 +107,27 @@ struct ModernOutputMeterPainter
         for (std::size_t ch = 0; ch < geometry.bars.size(); ++ch)
         {
             const auto bar = geometry.bars[ch];
-            g.setColour(RendererVisualStyle::mutedSurface());
-            g.fillRoundedRectangle(bar, 2.5f);
-            juce::ColourGradient gradient(juce::Colour(0xff12b88a), bar.getBottomLeft(),
-                juce::Colour(0xfff05b60), bar.getTopLeft(), false);
-            gradient.addColour(loudness ? 0.74 : 0.82, juce::Colour(0xff42c58b));
-            gradient.addColour(loudness ? 0.87 : 0.91, juce::Colour(0xffffbf59));
-            const auto fill = bar.withTop(bar.getBottom() - bar.getHeight() * state.levels[ch]);
-            if (fill.getHeight() >= 0.5f)
+            if (!SkinStyle::isOriginal())
+                SkinStyle::paintMeterBar(g, bar, state.levels[ch], state.trails[ch], loudness);
+            else
             {
-                g.setGradientFill(gradient);
-                g.fillRoundedRectangle(fill, 2.5f);
-            }
-            if (state.trails[ch] > 0.002f)
-            {
-                g.setColour(RendererVisualStyle::primaryText().withAlpha(0.62f));
-                g.drawHorizontalLine(juce::roundToInt(bar.getBottom() - bar.getHeight() * state.trails[ch]), bar.getX(), bar.getRight());
+                g.setColour(RendererVisualStyle::mutedSurface());
+                g.fillRoundedRectangle(bar, 2.5f);
+                juce::ColourGradient gradient(juce::Colour(0xff12b88a), bar.getBottomLeft(),
+                    juce::Colour(0xfff05b60), bar.getTopLeft(), false);
+                gradient.addColour(loudness ? 0.74 : 0.82, juce::Colour(0xff42c58b));
+                gradient.addColour(loudness ? 0.87 : 0.91, juce::Colour(0xffffbf59));
+                const auto fill = bar.withTop(bar.getBottom() - bar.getHeight() * state.levels[ch]);
+                if (fill.getHeight() >= 0.5f)
+                {
+                    g.setGradientFill(gradient);
+                    g.fillRoundedRectangle(fill, 2.5f);
+                }
+                if (state.trails[ch] > 0.002f)
+                {
+                    g.setColour(RendererVisualStyle::primaryText().withAlpha(0.62f));
+                    g.drawHorizontalLine(juce::roundToInt(bar.getBottom() - bar.getHeight() * state.trails[ch]), bar.getX(), bar.getRight());
+                }
             }
             const float slot = geometry.bars.size() > 1 ? geometry.bars[1].getX() - first.getX() : 20.0f;
             if (!geometry.channelLabels.isEmpty() && (slot >= 11.0f || ch % 2 == 0))

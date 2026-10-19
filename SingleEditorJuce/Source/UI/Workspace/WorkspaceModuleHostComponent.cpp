@@ -10,6 +10,7 @@
 #include "UI/LookAndFeel/ModernNorthStarVisualContract.h"
 #include "UI/Workspace/WorkspaceVisualContractTarget.h"
 #include "App/WindowsWindowShell.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -1208,6 +1209,32 @@ void WorkspaceModuleHostComponent::resized()
     synchroniseMagCloseButtons();
 }
 
+void WorkspaceModuleHostComponent::paint(juce::Graphics& g)
+{
+    // Optional skins lift docked tiles off the canvas; Original paints nothing here.
+    if (SkinStyle::isOriginal())
+        return;
+    for (const auto id : visibleLayout().visibleModules())
+    {
+        const auto* registration = findRegistration(id);
+        if (registration != nullptr && registration->component != nullptr && !layout.isFloating(id))
+            SkinStyle::paintPanelShadow(g, projectedBoundsForModule(id).toFloat());
+    }
+}
+
+void WorkspaceModuleHostComponent::lookAndFeelChanged()
+{
+    // A skin change can change the gap; the original value never changes here.
+    const auto gap = RendererVisualStyle::gapForDensity(visualDensity);
+    if (gap == moduleGap)
+        return;
+    moduleGap = gap;
+    resized();
+    if (onLayoutChanged)
+        onLayoutChanged();
+    repaint();
+}
+
 void WorkspaceModuleHostComponent::paintOverChildren(juce::Graphics& g)
 {
     if (!simpleView && layout.isFloating(WorkspaceModuleId::coreWaveform) && !coreBounds.isEmpty())
@@ -1239,6 +1266,12 @@ void WorkspaceModuleHostComponent::paintOverChildren(juce::Graphics& g)
             continue;
 
         const auto bounds = projectedBoundsForModule(id).toFloat().reduced(0.5f);
+        if (!SkinStyle::isOriginal())
+        {
+            SkinStyle::paintPanelOutline(g, bounds,
+                static_cast<bool>(registration->component->getProperties().getWithDefault("skinLive", false)));
+            continue;
+        }
         g.setColour(RendererVisualStyle::borderColour());
         g.drawRoundedRectangle(bounds,
                                RendererVisualStyle::cardRadius(),

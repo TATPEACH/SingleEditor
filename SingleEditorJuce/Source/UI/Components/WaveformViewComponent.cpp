@@ -11,6 +11,7 @@
 #include "UI/LookAndFeel/ModernWaveformPainter.h"
 #include "UI/LookAndFeel/ModernPanelPainter.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -235,8 +236,13 @@ void WaveformViewComponent::repaintAndNotify(juce::Rectangle<int> bounds)
 void WaveformViewComponent::paint(juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
-    g.setColour(ModernAppleLookAndFeel::panelBackground());
-    g.fillRoundedRectangle(bounds.reduced(0.5f), ModernAppleLookAndFeel::cardRadius());
+    // Optional skins paint the whole tile themselves, possibly translucent.
+    const bool skinTile = !SkinStyle::isOriginal() && !ModernAppleLookAndFeel::isStartupSkin();
+    if (!skinTile)
+    {
+        g.setColour(ModernAppleLookAndFeel::panelBackground());
+        g.fillRoundedRectangle(bounds.reduced(0.5f), ModernAppleLookAndFeel::cardRadius());
+    }
 
     if (!RendererVisualStyle::isClassic() && !ModernAppleLookAndFeel::isStartupSkin())
     {
@@ -246,6 +252,8 @@ void WaveformViewComponent::paint(juce::Graphics& g)
         g.reduceClipRegion(card);
         ModernPanelPainter::paint(g, getLocalBounds(), {}, ModernPanelPainter::Icon::waveform);
     }
+    if (skinTile)
+        SkinStyle::paintPanelOutline(g, bounds.reduced(0.5f), false);
 
     auto rulerBounds = getRulerBounds();
     auto plotBounds = getPlotBounds();

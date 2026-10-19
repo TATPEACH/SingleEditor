@@ -47,6 +47,7 @@
 #include "UI/Commands/CommandPaletteComponent.h"
 #include "UI/Commands/FocusNavigationModel.h"
 #include "UI/Commands/GuiCommandModel.h"
+#include "UI/Skins/SkinStyle.h"
 #include "UI/Workspace/WorkspaceModuleHostComponent.h"
 #include "UI/Workspace/WorkspacePresetCatalog.h"
 #include "Waveform/WaveformModel.h"
@@ -303,6 +304,7 @@ private:
     void refreshTransportReadout();
     void refreshTimelineMarkers();
     void setModernAppearanceTheme(ModernTheme theme);
+    void setModernSkin(ModernSkin skin);
     void refreshFooterReadout();
     void refreshWindowAndTitle();
     void applyChromePresentation(bool relayoutNow = true);

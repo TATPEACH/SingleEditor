@@ -3,6 +3,7 @@
 #include "UI/Renderer/RendererSelection.h"
 #include "UI/Renderer/RendererVisualStyle.h"
 #include "UI/Renderer/CoreActionIcons.h"
+#include "UI/Skins/SkinStyle.h"
 #include "ModernGlassPainter.h"
 #include "ModernTypography.h"
 
@@ -13,6 +14,18 @@ namespace
 juce::Colour withAlpha(juce::Colour colour, float alpha) { return colour.withAlpha(alpha); }
 ModernAppleLookAndFeel::SkinMode currentSkinMode = ModernAppleLookAndFeel::SkinMode::full;
 
+bool usesOptionalSkin() noexcept
+{
+    return !ModernAppleLookAndFeel::isStartupSkin() && !RendererVisualStyle::isClassic() && !SkinStyle::isOriginal();
+}
+
+// The original startup frame uses fixed neutral colours; optional skins start
+// in their own palette so the CoreReady promotion does not change the canvas.
+bool usesStartupConstants() noexcept
+{
+    return ModernAppleLookAndFeel::isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+        && SkinStyle::isOriginal();
+}
 }
 
 ModernAppleLookAndFeel::ModernAppleLookAndFeel()
@@ -182,6 +195,20 @@ void ModernAppleLookAndFeel::drawButtonBackground(juce::Graphics& g,
     const auto hasIcon = button.getProperties()["iconName"].toString().isNotEmpty();
     const auto isGhost = static_cast<bool>(button.getProperties().getWithDefault("ghostButton", false)) || (iconOnly && hasIcon);
 
+    if (usesOptionalSkin())
+    {
+        juce::Colour skinText;
+        if (SkinStyle::paintButtonBackground(g, button, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown, skinText))
+        {
+            ModernGlassPainter::focusOutline(g, button.getLocalBounds().toFloat(), componentRadius(),
+                                             button.hasKeyboardFocus(false), button.isEnabled());
+            // Read only by drawButtonText while a skin is active, so switching
+            // back to Original leaves the button's own colours untouched.
+            button.getProperties().set("skinTextColour", static_cast<juce::int64>(skinText.getARGB()));
+            return;
+        }
+    }
+
     if (isGhost)
     {
         if (!button.isEnabled())
@@ -298,9 +325,13 @@ void ModernAppleLookAndFeel::drawButtonText(juce::Graphics& g,
     if ((!iconOnly || !iconDrawn) && text.isNotEmpty())
     {
         g.setFont(font);
-        g.setColour(button.isEnabled() ? button.findColour(button.getToggleState() ? juce::TextButton::textColourOnId
-                                                                                   : juce::TextButton::textColourOffId)
-                                       : disabledText());
+        const auto skinText = button.getProperties()["skinTextColour"];
+        if (usesOptionalSkin() && skinText.isInt64())
+            g.setColour(juce::Colour(static_cast<juce::uint32>(static_cast<juce::int64>(skinText))));
+        else
+            g.setColour(button.isEnabled() ? button.findColour(button.getToggleState() ? juce::TextButton::textColourOnId
+                                                                                       : juce::TextButton::textColourOffId)
+                                           : disabledText());
         g.drawFittedText(text,
                          content,
                          iconName.isNotEmpty() && !iconOnly ? juce::Justification::centredLeft
@@ -319,6 +350,14 @@ void ModernAppleLookAndFeel::drawToggleButton(juce::Graphics& g,
     {
         const auto track = button.getLocalBounds().toFloat().removeFromLeft(29.0f).withSizeKeepingCentre(28.0f, 16.0f);
         const auto alpha = button.isEnabled() ? 1.0f : 0.4f;
+        if (usesOptionalSkin())
+        {
+            SkinStyle::paintSwitch(g, track, button.getToggleState(), button.isEnabled(), button.hasKeyboardFocus(true));
+            g.setColour(primaryText().withMultipliedAlpha(alpha));
+            g.setFont(juce::Font(juce::FontOptions(11.5f)));
+            g.drawText(button.getButtonText(), button.getLocalBounds().withTrimmedLeft(35), juce::Justification::centredLeft, true);
+            return;
+        }
         g.setColour((button.getToggleState() ? accentBlue() : borderColour()).withMultipliedAlpha(alpha));
         g.fillRoundedRectangle(track, 8.0f);
         const auto thumb = juce::Rectangle<float>(track.getX() + (button.getToggleState() ? 14.0f : 2.0f), track.getY() + 2.0f, 12.0f, 12.0f);
@@ -393,7 +432,9 @@ void ModernAppleLookAndFeel::drawComboBox(juce::Graphics& g,
                                           juce::ComboBox& box)
 {
     auto bounds = juce::Rectangle<float>(0.5f, 0.5f, static_cast<float>(width) - 1.0f, static_cast<float>(height) - 1.0f);
-    if (!isStartupSkin() && !RendererVisualStyle::isClassic())
+    if (usesOptionalSkin())
+        SkinStyle::paintComboBox(g, box, isButtonDown);
+    else if (!isStartupSkin() && !RendererVisualStyle::isClassic())
         ModernGlassPainter::control(g, box.getLocalBounds().toFloat(), box.isEnabled(),
                                      box.isMouseOver(), isButtonDown, false);
     else
@@ -491,6 +532,11 @@ juce::Slider::SliderLayout ModernAppleLookAndFeel::getSliderLayout(juce::Slider&
 void ModernAppleLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int width, int height,
     float position, float minimum, float maximum, juce::Slider::SliderStyle style, juce::Slider& slider)
 {
+    if (usesOptionalSkin() && style == juce::Slider::LinearHorizontal)
+    {
+        SkinStyle::paintLinearSlider(g, juce::Rectangle<int>(x, y, width, height).toFloat(), position, slider);
+        return;
+    }
     if (isStartupSkin() || RendererVisualStyle::isClassic() || style != juce::Slider::LinearHorizontal
         || !static_cast<bool>(slider.getProperties().getWithDefault("modernParameterSlider", false)))
     {
@@ -571,6 +617,11 @@ void ModernAppleLookAndFeel::drawPopupMenuBackground(juce::Graphics& g, int widt
         juce::LookAndFeel_V4::drawPopupMenuBackground(g, width, height);
         return;
     }
+    if (!SkinStyle::isOriginal())
+    {
+        SkinStyle::paintPopupBackground(g, { 0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height) });
+        return;
+    }
     ModernGlassPainter::surface(g, { 0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height) },
                                 elevatedPanelBackground(), 12.0f);
 }
@@ -595,13 +646,16 @@ void ModernAppleLookAndFeel::drawPopupMenuItem(juce::Graphics& g, const juce::Re
         return;
     }
     const bool selected = active && highlighted;
+    const bool neutralHighlight = selected && !SkinStyle::isOriginal() && !SkinStyle::popupHighlightUsesAccent();
     auto row = area.reduced(4, 2);
-    if (selected)
+    if (neutralHighlight)
+        SkinStyle::paintPopupHighlight(g, row.toFloat());
+    else if (selected)
     {
         g.setColour(accentBlue());
         g.fillRoundedRectangle(row.toFloat(), 6.0f);
     }
-    const auto ink = !active ? disabledText() : selected ? juce::Colours::white
+    const auto ink = !active ? disabledText() : selected && !neutralHighlight ? juce::Colours::white
         : textColour != nullptr ? *textColour : primaryText();
     row = row.reduced(7, 0);
     const auto iconArea = row.removeFromLeft(18).toFloat().withSizeKeepingCentre(13.0f, 13.0f);
@@ -634,7 +688,7 @@ void ModernAppleLookAndFeel::drawPopupMenuItem(juce::Graphics& g, const juce::Re
         const auto shortcutArea = row.removeFromRight(width);
         row.removeFromRight(10);
         g.setFont(font);
-        g.setColour(active ? selected ? juce::Colours::white.withAlpha(0.85f) : secondaryText() : disabledText());
+        g.setColour(active ? selected && !neutralHighlight ? juce::Colours::white.withAlpha(0.85f) : secondaryText() : disabledText());
         g.drawText(shortcut, shortcutArea, juce::Justification::centredRight, true);
     }
     g.setColour(ink);
@@ -696,14 +750,14 @@ bool ModernAppleLookAndFeel::isStartupSkin() noexcept
 
 juce::Colour ModernAppleLookAndFeel::windowBackground()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0xfff7f7f8)
         : RendererVisualStyle::windowBackground();
 }
 
 juce::Colour ModernAppleLookAndFeel::panelBackground()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0xfffdfdfd)
         : RendererVisualStyle::panelBackground();
 }
@@ -715,28 +769,28 @@ juce::Colour ModernAppleLookAndFeel::elevatedPanelBackground()
 
 juce::Colour ModernAppleLookAndFeel::workspaceSurface()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0xfffcfcfe)
         : RendererVisualStyle::workspaceSurface();
 }
 
 juce::Colour ModernAppleLookAndFeel::mutedSurface()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0xfff3f4f6)
         : RendererVisualStyle::mutedSurface();
 }
 
 juce::Colour ModernAppleLookAndFeel::titleBarBackground()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0xfff1f3f6)
         : RendererVisualStyle::titleBarBackground();
 }
 
 juce::Colour ModernAppleLookAndFeel::borderColour()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0x06000000)
         : RendererVisualStyle::borderColour();
 }
@@ -750,14 +804,14 @@ juce::Colour ModernAppleLookAndFeel::waveformBlue() { return RendererVisualStyle
 juce::Colour ModernAppleLookAndFeel::waveformCyan() { return RendererVisualStyle::waveformCyan(); }
 juce::Colour ModernAppleLookAndFeel::ghostHoverFill()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0x09000000)
         : RendererVisualStyle::ghostHoverFill();
 }
 
 juce::Colour ModernAppleLookAndFeel::ghostPressedFill()
 {
-    return isStartupSkin() && RendererSelection::selected() == RendererKind::modern
+    return usesStartupConstants()
         ? juce::Colour(0x14000000)
         : RendererVisualStyle::ghostPressedFill();
 }

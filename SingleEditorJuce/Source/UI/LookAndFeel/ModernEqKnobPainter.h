@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -34,6 +35,13 @@ struct ModernEqKnobPainter final
     {
         const auto dial = dialBounds(available, static_cast<float>(slider.getProperties().getWithDefault("modernKnobDiameter", 32.0)));
         if (dial.getWidth() < 5.0f) return;
+        if (!SkinStyle::isOriginal())
+        {
+            SkinStyle::paintKnob(g, dial, startAngle + std::clamp(position, 0.0f, 1.0f) * (endAngle - startAngle),
+                                 bandColour(static_cast<int>(slider.getProperties()["eqBandIndex"])),
+                                 slider.isEnabled(), slider.hasKeyboardFocus(false));
+            return;
+        }
         juce::Graphics::ScopedSaveState save(g);
         const bool night = RendererVisualStyle::isNight();
         const auto accent = bandColour(static_cast<int>(slider.getProperties()["eqBandIndex"]));

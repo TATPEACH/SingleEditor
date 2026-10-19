@@ -1079,6 +1079,7 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
     footerBar.getProperties().set("fillColour", static_cast<int64_t>(ModernAppleLookAndFeel::mutedSurface().getARGB()));
     footerBar.getProperties().set("fillAlpha", 0.98);
     footerBar.getProperties().set("shadowAlpha", 0.0);
+    footerBar.getProperties().set("skinRole", "statusBar");
     addChildComponent(selectionPopup);
     addAndMakeVisible(actionDragZone);
     selectionPopup.setInterceptsMouseClicks(!RendererVisualStyle::isClassic(), true);
@@ -1276,9 +1277,17 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
             menu.addItem(1208, "Recovery Actions...", recoveryService != nullptr);
         }
         juce::PopupMenu appearanceMenu;
-        constexpr int lightThemeItem = 1001, nightThemeItem = 1002;
-        appearanceMenu.addItem(lightThemeItem, "Modern Glass - Light", true, !RendererVisualStyle::isNight());
-        appearanceMenu.addItem(nightThemeItem, "Modern Glass - Night", true, RendererVisualStyle::isNight());
+        constexpr int lightThemeItem = 1001, nightThemeItem = 1002, firstSkinItem = 1401;
+        appearanceMenu.addSectionHeader("Skin");
+        for (const auto skin : { ModernSkin::original, ModernSkin::soft, ModernSkin::liquid, ModernSkin::tiles })
+            if (SkinStyle::isAvailable(skin))
+                appearanceMenu.addItem(firstSkinItem + static_cast<int>(skin), SkinStyle::menuName(skin), true,
+                                       SkinStyle::active() == skin);
+        appearanceMenu.addSeparator();
+        const juce::String themePrefix = SkinStyle::isOriginal() ? "Modern Glass - " : "";
+        appearanceMenu.addItem(lightThemeItem, themePrefix + "Light", true, !RendererVisualStyle::isNight());
+        appearanceMenu.addItem(nightThemeItem, themePrefix + "Night", SkinStyle::supportsNight(SkinStyle::active()),
+                               RendererVisualStyle::isNight());
         appearanceMenu.addSeparator();
         appearanceMenu.addItem(1101, "Solid - Reduce transparency", true, RendererVisualStyle::glassMaterial() == ModernGlassMaterial::solid);
         appearanceMenu.addItem(1102, "Frosted glass", true, RendererVisualStyle::glassMaterial() == ModernGlassMaterial::frosted);
@@ -1342,6 +1351,11 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
                 if (result == lightThemeItem || result == nightThemeItem)
                 {
                     safe->setModernAppearanceTheme(result == nightThemeItem ? ModernTheme::night : ModernTheme::light);
+                    return;
+                }
+                if (result >= firstSkinItem && result <= firstSkinItem + static_cast<int>(ModernSkin::tiles))
+                {
+                    safe->setModernSkin(static_cast<ModernSkin>(result - firstSkinItem));
                     return;
                 }
                 if (result > 0 && result <= static_cast<int>(actions.size()))
@@ -3015,6 +3029,7 @@ void MainComponent::lookAndFeelChanged()
     if (RendererVisualStyle::isClassic()) return;
     lightThemeButton.setToggleState(!RendererVisualStyle::isNight(), juce::dontSendNotification);
     nightThemeButton.setToggleState(RendererVisualStyle::isNight(), juce::dontSendNotification);
+    nightThemeButton.setEnabled(SkinStyle::supportsNight(SkinStyle::active()));
     footerBar.getProperties().set("fillColour", static_cast<int64_t>(ModernAppleLookAndFeel::mutedSurface().getARGB()));
     selectionPopup.getProperties().set("fillColour", static_cast<int64_t>(ModernAppleLookAndFeel::elevatedPanelBackground().getARGB()));
     if (bnkControls)
@@ -3061,6 +3076,7 @@ void MainComponent::applyChromePresentation(bool relayoutNow)
     nightThemeButton.setVisible(showExtendedChrome && !RendererVisualStyle::isClassic());
     lightThemeButton.setToggleState(!RendererVisualStyle::isNight(), juce::dontSendNotification);
     nightThemeButton.setToggleState(RendererVisualStyle::isNight(), juce::dontSendNotification);
+    nightThemeButton.setEnabled(SkinStyle::supportsNight(SkinStyle::active()));
     transportStatusLabel.setModernPresentation(showExtendedChrome && !RendererVisualStyle::isClassic());
     for (auto* label : { &engineStatusLabel, &footerLeftLabel, &footerRightLabel })
         label->setModernPresentation(showExtendedChrome && !RendererVisualStyle::isClassic());
@@ -3855,7 +3871,19 @@ void MainComponent::fileDragExit(const juce::StringArray&)
 
 void MainComponent::paint(juce::Graphics& g)
 {
-    g.fillAll(ModernAppleLookAndFeel::windowBackground());
+    if (!SkinStyle::isOriginal() && !ModernAppleLookAndFeel::isStartupSkin())
+    {
+        // Optional skins share one backdrop with the window caption.
+        const auto* window = getTopLevelComponent();
+        SkinStyle::paintWindowBackground(g, getLocalBounds().toFloat(),
+                                         window->getLocalPoint(this, juce::Point<int>()).toFloat(),
+                                         window->getLocalBounds().toFloat());
+        for (const auto* raised : std::initializer_list<const juce::Component*> { &actionBar, &waveformView })
+            if (raised->getParentComponent() == this && raised->isVisible() && !raised->getBounds().isEmpty())
+                SkinStyle::paintPanelShadow(g, raised->getBounds().toFloat());
+    }
+    else
+        g.fillAll(ModernAppleLookAndFeel::windowBackground());
 
     if (dragHighlight)
     {
@@ -4026,8 +4054,11 @@ void MainComponent::resized()
         for (size_t i = 0; i < transport.size(); ++i)
         {
             transport[i]->getProperties().set("glassControl", true);
+            transport[i]->getProperties().set("skinRole", transport[i] == &playButton ? "transportPrimary" : "transport");
             place(*transport[i], layout.transport[i]);
         }
+        actionBar.getProperties().set("skinTransport",
+                                      layout.transport.front().getUnion(layout.transport.back()).toString());
         openButton.getProperties().set("glassControl", true);
         place(transportStatusLabel, layout.clock);
         place(undoButton, layout.undo);
@@ -8351,6 +8382,24 @@ void MainComponent::setModernAppearanceTheme(ModernTheme theme)
     if (auto* settings = appProperties.getUserSettings())
     {
         settings->setValue(PreferencesComponent::modernThemeKey, theme == ModernTheme::night ? "night" : "light");
+        settings->saveIfNeeded();
+    }
+}
+
+void MainComponent::setModernSkin(ModernSkin skin)
+{
+    if (RendererVisualStyle::isClassic() || skin == SkinStyle::active() || !SkinStyle::isAvailable(skin)) return;
+    SkinStyle::setActive(skin);
+    auto& desktop = juce::Desktop::getInstance();
+    for (int i = 0; i < desktop.getNumComponents(); ++i)
+        ModernAppleLookAndFeel::refreshTheme(*desktop.getComponent(i));
+    // Padding, gaps and the glass backdrop belong to the skin as well.
+    resized();
+    selectionPopup.invalidateBackdrop();
+    if (commandPalette != nullptr) commandPalette->invalidateBackdrop();
+    if (auto* settings = appProperties.getUserSettings())
+    {
+        settings->setValue(PreferencesComponent::modernSkinKey, juce::String(std::string(SkinStyle::id(skin))));
         settings->saveIfNeeded();
     }
 }

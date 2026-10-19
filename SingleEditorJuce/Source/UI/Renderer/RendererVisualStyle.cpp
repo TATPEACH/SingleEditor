@@ -5,6 +5,7 @@
 
 #include "UI/LookAndFeel/ModernNorthStarVisualContract.h"
 #include "UI/LookAndFeel/ModernGlassTokens.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -89,7 +90,13 @@ void RendererMotionController::snapTo(float value) noexcept
 
 bool RendererVisualStyle::isClassic() noexcept { return activeKind() == RendererKind::classic; }
 void RendererVisualStyle::setModernTheme(ModernTheme theme) noexcept { selectedTheme.store(theme, std::memory_order_relaxed); }
-ModernTheme RendererVisualStyle::modernTheme() noexcept { return selectedTheme.load(std::memory_order_relaxed); }
+ModernTheme RendererVisualStyle::modernTheme() noexcept
+{
+    // A skin without a night design keeps the stored request but resolves to Light.
+    const auto requested = selectedTheme.load(std::memory_order_relaxed);
+    return requested == ModernTheme::night && !SkinStyle::supportsNight(SkinStyle::active())
+        ? ModernTheme::light : requested;
+}
 bool RendererVisualStyle::isNight() noexcept { return !isClassic() && modernTheme() == ModernTheme::night; }
 void RendererVisualStyle::setGlassMaterial(ModernGlassMaterial material) noexcept { selectedGlass.store(material, std::memory_order_relaxed); }
 ModernGlassMaterial RendererVisualStyle::glassMaterial() noexcept
@@ -98,6 +105,8 @@ ModernGlassMaterial RendererVisualStyle::glassMaterial() noexcept
 }
 const ModernGlassTokens::Palette& RendererVisualStyle::modernPalette() noexcept
 {
+    if (!SkinStyle::isOriginal())
+        return SkinStyle::palette(isNight());
     return isNight() ? ModernGlassTokens::night : ModernGlassTokens::light;
 }
 juce::Colour RendererVisualStyle::windowBackground() { return colour(classicWindow, modernPalette().background); }
@@ -110,7 +119,11 @@ juce::Colour RendererVisualStyle::borderColour() { return colour(classicBorder, 
 juce::Colour RendererVisualStyle::primaryText() { return colour(classicText, modernPalette().text); }
 juce::Colour RendererVisualStyle::secondaryText() { return colour(classicMutedText, modernPalette().secondaryText); }
 juce::Colour RendererVisualStyle::disabledText() { return secondaryText().withAlpha(0.52f); }
-juce::Colour RendererVisualStyle::accentOrange() { return colour(0xff8b5a00, ModernNorthStarVisualContract::warningArgb); }
+juce::Colour RendererVisualStyle::accentOrange()
+{
+    if (!SkinStyle::isOriginal()) { noteTokens(); return juce::Colour(SkinStyle::extras(isNight()).live); }
+    return colour(0xff8b5a00, ModernNorthStarVisualContract::warningArgb);
+}
 juce::Colour RendererVisualStyle::accentBlue() { return colour(classicAccent, modernPalette().accent); }
 juce::Colour RendererVisualStyle::accentPurple() { return colour(0xff5a2d82, modernPalette().selectionText); }
 juce::Colour RendererVisualStyle::waveformBlue() { return colour(classicWaveform, modernPalette().waveform[0]); }
@@ -128,17 +141,46 @@ juce::Colour RendererVisualStyle::waveformLaneColour(int index)
 
 juce::Colour RendererVisualStyle::waveformSurface() { return colour(classicSurface, modernPalette().surface); }
 juce::Colour RendererVisualStyle::meterFill() { return colour(classicWaveform, modernPalette().accent); }
-juce::Colour RendererVisualStyle::danger() { return colour(classicDanger, ModernNorthStarVisualContract::dangerArgb); }
+juce::Colour RendererVisualStyle::danger()
+{
+    if (!SkinStyle::isOriginal()) { noteTokens(); return juce::Colour(SkinStyle::extras(isNight()).danger); }
+    return colour(classicDanger, ModernNorthStarVisualContract::dangerArgb);
+}
 juce::Colour RendererVisualStyle::accentSoft() { return colour(classicAccentSoft, modernPalette().selection); }
 juce::Colour RendererVisualStyle::accentInk() { return colour(classicAccentInk, modernPalette().selectionText); }
 
-float RendererVisualStyle::cardRadius() noexcept { noteTokens(); return isClassic() ? 0.0f : ModernGlassTokens::cardRadius; }
-float RendererVisualStyle::componentRadius() noexcept { noteTokens(); return isClassic() ? 0.0f : ModernGlassTokens::controlRadius; }
-float RendererVisualStyle::focusRadius() noexcept { noteTokens(); return isClassic() ? 0.0f : ModernGlassTokens::controlRadius; }
+float RendererVisualStyle::cardRadius() noexcept
+{
+    noteTokens();
+    if (!SkinStyle::isOriginal()) return SkinStyle::geometry().tileRadius;
+    return isClassic() ? 0.0f : ModernGlassTokens::cardRadius;
+}
+float RendererVisualStyle::componentRadius() noexcept
+{
+    noteTokens();
+    if (!SkinStyle::isOriginal()) return SkinStyle::geometry().controlRadius;
+    return isClassic() ? 0.0f : ModernGlassTokens::controlRadius;
+}
+float RendererVisualStyle::focusRadius() noexcept
+{
+    noteTokens();
+    if (!SkinStyle::isOriginal()) return SkinStyle::geometry().controlRadius;
+    return isClassic() ? 0.0f : ModernGlassTokens::controlRadius;
+}
 float RendererVisualStyle::focusRingWidth() noexcept { noteTokens(); return isClassic() ? 1.0f : ModernNorthStarVisualContract::Elevation::focusRingWidth; }
 float RendererVisualStyle::magBorderWidth() noexcept { noteTokens(); return isClassic() ? 1.0f : ModernNorthStarVisualContract::Elevation::magBorderWidth; }
-int RendererVisualStyle::outerPadding() noexcept { noteTokens(); return isClassic() ? 6 : ModernNorthStarVisualContract::Spacing::outerPadding; }
-int RendererVisualStyle::interPanelGap() noexcept { noteTokens(); return isClassic() ? 4 : ModernNorthStarVisualContract::Spacing::standardGap; }
+int RendererVisualStyle::outerPadding() noexcept
+{
+    noteTokens();
+    if (!SkinStyle::isOriginal()) return SkinStyle::geometry().outerPadding;
+    return isClassic() ? 6 : ModernNorthStarVisualContract::Spacing::outerPadding;
+}
+int RendererVisualStyle::interPanelGap() noexcept
+{
+    noteTokens();
+    if (!SkinStyle::isOriginal()) return SkinStyle::geometry().gap;
+    return isClassic() ? 4 : ModernNorthStarVisualContract::Spacing::standardGap;
+}
 int RendererVisualStyle::topBarHeight() noexcept { noteTokens(); return isClassic() ? 40 : ModernNorthStarVisualContract::Spacing::topBarHeight; }
 int RendererVisualStyle::bottomBarHeight() noexcept { noteTokens(); return isClassic() ? 20 : ModernNorthStarVisualContract::Spacing::bottomBarHeight; }
 int RendererVisualStyle::titleStripHeight() noexcept { noteTokens(); return isClassic() ? 24 : ModernNorthStarVisualContract::Spacing::titleStripHeight; }
@@ -149,6 +191,11 @@ int RendererVisualStyle::gapForDensity(RendererDensity density) noexcept
     noteTokens();
     if (isClassic())
         return density == RendererDensity::compact ? 2 : (density == RendererDensity::expanded ? 6 : 4);
+    if (!SkinStyle::isOriginal())
+    {
+        const auto gap = SkinStyle::geometry().gap;
+        return density == RendererDensity::compact ? gap - 4 : (density == RendererDensity::expanded ? gap + 4 : gap);
+    }
     return ModernNorthStarVisualContract::gapForDensity(density);
 }
 

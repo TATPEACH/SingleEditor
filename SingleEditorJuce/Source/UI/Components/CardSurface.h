@@ -2,6 +2,7 @@
 
 #include "UI/LookAndFeel/ModernAppleLookAndFeel.h"
 #include "UI/LookAndFeel/ModernGlassPainter.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -14,8 +15,19 @@ public:
     {
         if (static_cast<bool>(getProperties().getWithDefault("glassChrome", false)))
         {
+            if (!SkinStyle::isOriginal())
+            {
+                SkinStyle::paintToolbar(g, *this);
+                return;
+            }
             ModernGlassPainter::surface(g, getLocalBounds().toFloat(),
                                          ModernAppleLookAndFeel::panelBackground(), 12.0f);
+            return;
+        }
+        if (!SkinStyle::isOriginal() && !ModernAppleLookAndFeel::isStartupSkin()
+            && getProperties()["skinRole"].toString() == "statusBar")
+        {
+            SkinStyle::paintStatusBar(g, getLocalBounds().toFloat());
             return;
         }
         auto bounds = getLocalBounds().toFloat().reduced(0.5f);

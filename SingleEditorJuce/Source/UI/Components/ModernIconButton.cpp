@@ -4,6 +4,7 @@
 #include "UI/LookAndFeel/ModernAppleLookAndFeel.h"
 #include "UI/Renderer/CoreActionIcons.h"
 #include "UI/Renderer/RendererVisualStyle.h"
+#include "UI/Skins/SkinStyle.h"
 
 namespace singleeditor
 {
@@ -179,7 +180,12 @@ void ModernIconButton::paintButton(juce::Graphics& g, bool hovered, bool down)
 
     const bool glassControl = !ModernAppleLookAndFeel::isStartupSkin()
         && static_cast<bool>(getProperties().getWithDefault("glassControl", false));
-    if (glassControl)
+    bool onAccent = false;
+    if (glassControl && !SkinStyle::isOriginal())
+    {
+        SkinStyle::paintIconButton(g, *this, hovered, down, onAccent);
+    }
+    else if (glassControl)
     {
         ModernGlassPainter::control(g, bounds, isEnabled(), hovered, down, getToggleState());
     }
@@ -206,7 +212,12 @@ void ModernIconButton::paintButton(juce::Graphics& g, bool hovered, bool down)
         return;
 
     prepareIconsIfNeeded();
-    auto* drawable = isEnabled() ? normalIcon.get() : disabledIcon.get();
+    if (onAccent && isEnabled() && onAccentIcon == nullptr && iconName.isNotEmpty())
+        if (const auto assetId = RendererVisualStyle::assetIdForFileName(iconName.toRawUTF8());
+            assetId != RendererAssetId::unknown)
+            onAccentIcon = createCachedTintedDrawable(assetId, juce::Colours::white);
+    auto* drawable = onAccent && isEnabled() && onAccentIcon != nullptr ? onAccentIcon.get()
+                   : isEnabled() ? normalIcon.get() : disabledIcon.get();
     if (drawable != nullptr)
     {
         // Apply press scale via Graphics transform (not component transform - that breaks hit testing)
@@ -263,6 +274,7 @@ void ModernIconButton::prepareIconsIfNeeded()
     iconsNeedPreparation = false;
     normalIcon.reset();
     disabledIcon.reset();
+    onAccentIcon.reset();
 
     if (sourceDrawable != nullptr)
     {

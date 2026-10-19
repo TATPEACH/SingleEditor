@@ -3,6 +3,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "UI/Renderer/RendererVisualStyle.h"
 #include "UI/LookAndFeel/ModernTypography.h"
+#include "UI/Skins/SkinStyle.h"
 #include <optional>
 #include <cmath>
 
@@ -35,6 +36,11 @@ public:
         if (!modernPresentation || RendererVisualStyle::isClassic() || !parts)
         {
             juce::Label::paint(g);
+            return;
+        }
+        if (!SkinStyle::isOriginal())
+        {
+            SkinStyle::paintClock(g, getLocalBounds().toFloat(), parts->main, parts->frames);
             return;
         }
         auto bounds = getLocalBounds().toFloat();
@@ -75,7 +81,7 @@ public:
         if (text.startsWith("TP ") || text.startsWith("RMS ") || text.startsWith("LUFS "))
             text = text.fromFirstOccurrenceOf(" ", false, false);
         g.setFont(ModernTypography::font(11.0f));
-        g.setColour(RendererVisualStyle::accentBlue());
+        g.setColour(SkinStyle::isOriginal() ? RendererVisualStyle::accentBlue() : RendererVisualStyle::secondaryText());
         g.drawText(text, getLocalBounds().reduced(2, 0), juce::Justification::centredRight, true);
     }
 };
@@ -136,7 +142,11 @@ public:
     void paintButton(juce::Graphics& g, bool highlighted, bool down) override
     {
         getLookAndFeel().drawButtonBackground(g, *this, findColour(buttonColourId), highlighted, down);
-        g.setColour(getToggleState() ? juce::Colours::white : RendererVisualStyle::primaryText());
+        if (!SkinStyle::isOriginal())
+            g.setColour(!isEnabled() ? RendererVisualStyle::disabledText()
+                        : getToggleState() ? RendererVisualStyle::accentBlue() : RendererVisualStyle::secondaryText());
+        else
+            g.setColour(getToggleState() ? juce::Colours::white : RendererVisualStyle::primaryText());
         const auto box = getLocalBounds().toFloat().withSizeKeepingCentre(16, 16);
         juce::Path icon;
         if (nightIcon)
