@@ -921,6 +921,7 @@ set(SINGLE_EDITOR_RENDERER_STYLE_SOURCES
     # D  Layered Tiles
     Source/UI/Skins/TilesSkin.cpp
     # A  Soft
+    Source/UI/Skins/SoftSkin.cpp
     # C  Liquid Glass
 )
 
