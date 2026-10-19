@@ -919,6 +919,7 @@ set(SINGLE_EDITOR_RENDERER_STYLE_SOURCES
     # its label, so it can be reverted or cherry-picked on its own.
     Source/UI/Skins/SkinStyle.cpp
     # D  Layered Tiles
+    Source/UI/Skins/TilesSkin.cpp
     # A  Soft
     # C  Liquid Glass
 )

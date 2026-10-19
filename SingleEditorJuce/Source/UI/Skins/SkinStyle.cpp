@@ -22,6 +22,7 @@ const skins::Definition* definition(ModernSkin skin) noexcept
     switch (skin)
     {
         // D  Layered Tiles
+        case ModernSkin::tiles: return &skins::tilesSkin();
         // A  Soft
         // C  Liquid Glass
         case ModernSkin::original: break;
