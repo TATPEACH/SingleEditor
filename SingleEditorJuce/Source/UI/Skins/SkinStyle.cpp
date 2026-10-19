@@ -26,6 +26,7 @@ const skins::Definition* definition(ModernSkin skin) noexcept
         // A  Soft
         case ModernSkin::soft: return &skins::softSkin();
         // C  Liquid Glass
+        case ModernSkin::liquid: return &skins::liquidSkin();
         case ModernSkin::original: break;
     }
     return nullptr;

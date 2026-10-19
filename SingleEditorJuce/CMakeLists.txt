@@ -923,6 +923,7 @@ set(SINGLE_EDITOR_RENDERER_STYLE_SOURCES
     # A  Soft
     Source/UI/Skins/SoftSkin.cpp
     # C  Liquid Glass
+    Source/UI/Skins/LiquidSkin.cpp
 )
 
 set(SINGLE_EDITOR_CLI_APPLICATION_SOURCES
