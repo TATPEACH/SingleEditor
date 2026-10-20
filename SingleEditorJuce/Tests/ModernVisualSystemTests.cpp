@@ -13,6 +13,7 @@
 #include "UI/Renderer/RendererSelection.h"
 #include "UI/Renderer/RendererVisualStyle.h"
 #include "UI/Renderer/CoreActionIcons.h"
+#include "UI/Skins/SkinStyle.h"
 
 #include <array>
 #include <cstdlib>
@@ -38,6 +39,39 @@ public:
         g.fillAll(singleeditor::ModernAppleLookAndFeel::windowBackground());
     }
 };
+
+void runOptionalSkinThemeTest()
+{
+    using namespace singleeditor;
+    RendererVisualStyle::setModernTheme(ModernTheme::night);
+    SkinStyle::setActive(ModernSkin::soft);
+    require(!RendererVisualStyle::isNight(), "Soft resolves the saved Night request to Light");
+    SkinStyle::setActive(ModernSkin::liquid);
+    require(RendererVisualStyle::isNight(), "switching away from Soft restores the saved Night request");
+
+    ModernAppleLookAndFeel lookAndFeel;
+    for (const auto skin : { ModernSkin::original, ModernSkin::soft, ModernSkin::liquid, ModernSkin::tiles })
+    {
+        SkinStyle::setActive(skin);
+        for (const auto theme : { ModernTheme::light, ModernTheme::night })
+        {
+            RendererVisualStyle::setModernTheme(theme);
+            juce::Image picture(juce::Image::ARGB, 320, 200, true);
+            juce::Graphics g(picture);
+            lookAndFeel.drawPopupMenuBackground(g, picture.getWidth(), picture.getHeight());
+            require(picture.getPixelAt(160, 100).isOpaque(),
+                    "every skin gives detached popup menus an opaque reading surface");
+        }
+    }
+    SkinStyle::setActive(ModernSkin::liquid);
+    RendererSelection::resetForTests(RendererKind::classic);
+    require(SkinStyle::isOriginal(), "Classic keeps its own paint path with an optional skin saved");
+    RendererSelection::resetForTests(RendererKind::modern);
+    require(SkinStyle::active() == ModernSkin::liquid, "returning to Modern retains the selected skin");
+    SkinStyle::setActive(ModernSkin::original);
+    RendererVisualStyle::setModernTheme(ModernTheme::light);
+    std::cout << "OptionalSkinThemeTests passed (Night restoration, eight popup surfaces, Classic isolation)\n";
+}
 
 void runModernRegionOutlineTest()
 {
@@ -1039,6 +1073,7 @@ int main(int argc, char** argv)
         return 0;
     }
     singleeditor::RendererSelection::resetForTests(singleeditor::RendererKind::modern);
+    runOptionalSkinThemeTest();
     runWindowChromeTests();
     runWaveformPeakLevelTests();
     runWaveformOverviewTests();

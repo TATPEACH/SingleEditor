@@ -11,9 +11,9 @@ License texts and source/build details are included at:
 
 The corresponding source archives, upstream build files and applicable
 configuration/modification instructions accompany this version as:
-  SingleEditor-v0.1.0-dependency-sources.zip
+  SingleEditor-v0.1.1-dependency-sources.zip
 The application's own complete source accompanies it as:
-  SingleEditor-v0.1.0-source.zip
+  SingleEditor-v0.1.1-source.zip
 Download both source assets from the same GitHub Release as the binary.
 Local trial releases include these source ZIPs in the release directory.
 

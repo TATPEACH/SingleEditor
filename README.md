@@ -6,9 +6,9 @@
 
 打开声音，马上播放；看一眼波形，找到需要的位置；调整增益、做一段淡入淡出，或删掉不需要的片段，再保存下来。Single Editor（SE）希望把这些日常操作放进一个轻快、直接的窗口。
 
-当前面向 **Windows x64**，**v0.1.0 首次公开预览版**已提供便携包和当前用户安装包。
+当前面向 **Windows x64**，**v0.1.1 公开预览版**提供便携包和当前用户安装包。
 
-[下载 v0.1.0](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0) · [便携 ZIP](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.0/SingleEditor-v0.1.0-windows-x64-portable.zip) · [安装包](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.0/SingleEditor-v0.1.0-windows-x64-setup.exe)
+[下载 v0.1.1](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.1) · [便携 ZIP](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.1/SingleEditor-v0.1.1-windows-x64-portable.zip) · [安装包](https://github.com/TATPEACH/SingleEditor/releases/download/v0.1.1/SingleEditor-v0.1.1-windows-x64-setup.exe)
 
 [操作手册](MANUAL.md) · [新电脑开发](docs/DEVELOPMENT.md) · [构建指南](BUILDING.md) · [贡献指南](CONTRIBUTING.md)
 
@@ -43,9 +43,15 @@
 
 普通音频主要支持 **WAV、AIFF、FLAC、Ogg Vorbis、MP3**。格式能力也取决于实际编码和文件内容。完整入口、参数和操作范围见 [操作手册](MANUAL.md)。
 
+## v0.1.1 的新外观
+
+在 **More → Appearance** 中选择皮肤：保留默认 Modern Glass，新增柔和浮雕的 **Soft**、极光背景与半透明面板的 **Liquid Glass**，以及强调层次和边界的 **Layered Tiles**。Liquid Glass 和 Layered Tiles 支持 Light / Night；Soft 仅提供 Light。
+
+皮肤选择会保存，播放、编辑和快捷键保持一致。本版也修正了启动时的字体一致性、可选皮肤下命令面板的遮挡，以及 Layered Tiles 的菜单高亮。
+
 ## 速度与体积
 
-v0.1.0 最终包的本机测量结果：
+以下为 v0.1.0 最终包的本机测量；下方对比动图也录制于 v0.1.0：
 
 | 项目 | 结果 |
 |---|---|
@@ -99,6 +105,6 @@ SE 仍处于早期阶段，先把单文件听音、波形和编辑工作流做�
 
 SE 自有、可授权的项目代码采用 **AGPL-3.0-only**，见 [LICENSE](LICENSE)。第三方代码、适配部分、字体和素材遵守各自许可与版权声明，详见 [第三方声明](tools/release/notices/ThirdPartyNotices.md) 和 [解码运行库来源](tools/release/notices/vgmstream-r2083/README.md)。
 
-SE 通过可选 vgmstream helper 使用 **FFmpeg n5.1.2（LGPL-2.1-or-later）**。对应源码在 [同一次 Release](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0) 的 **SingleEditor-v0.1.0-dependency-sources.zip** 和 **SingleEditor-v0.1.0-source.zip** 中提供：前者包含 FFmpeg、静态 Opus、上游构建文件及适用修改说明，后者包含 SE 完整源码和本地依赖适配。日常使用只需下载一个二进制包，源码供查阅、修改或重新构建。
+SE 通过可选 vgmstream helper 使用 **FFmpeg n5.1.2（LGPL-2.1-or-later）**。对应源码在 [同一次 Release](https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.1) 的 **SingleEditor-v0.1.1-dependency-sources.zip** 和 **SingleEditor-v0.1.1-source.zip** 中提供：前者包含 FFmpeg、静态 Opus、上游构建文件及适用修改说明，后者包含 SE 完整源码和本地依赖适配。日常使用只需下载一个二进制包，源码供查阅、修改或重新构建。
 
 应用使用连续波形品牌图标，源文件与生成方法见 [品牌资源](SingleEditorJuce/Resources/BRAND.md)。工具栏图标来源见 [图标声明](icons/NOTICE.md)；随源码保留的开发及发布工具参考来源见 [源码工具声明](tools/release/notices/source-tools/README.md)。

@@ -13,7 +13,7 @@ Single Editor 通过独立 vgmstream helper 使用 FFmpeg。本包的四个 x86 
 | avcodec-vgmstream-59.dll | 59.37.100 | DC6F469C2F1728D8F8809223C190AF693EE48E5E005B73711FC356C91B8C3ADC |
 | avformat-vgmstream-59.dll | 59.27.100 | 909CF4B58656B0ED6913FF6E9964B76EADEAF65F1396852D90D4C8BC0CC18F05 |
 
-同一次发布的 **SingleEditor-v0.1.0-dependency-sources.zip** 包含以下原始归档，以及本说明、来源清单和 SE 构建指南：
+同一次发布的 **SingleEditor-v0.1.1-dependency-sources.zip** 包含以下原始归档，以及本说明、来源清单和 SE 构建指南：
 
 | 文件 | 固定来源 | 归档 SHA256 |
 |---|---|---|

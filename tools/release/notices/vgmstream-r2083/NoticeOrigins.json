@@ -316,7 +316,7 @@
   ],
   "source_archives": {
     "status": "prepared-corresponding-sources-and-build-instructions",
-    "scope": "Ten actual archives cover eight dependency families and retain upstream implementation, license and build files. FFMPEG_BUILDING.md records actual configuration and applicable modification instructions. Co-distribute SingleEditor-v0.1.0-dependency-sources.zip with the binary on the same Release. These records establish source delivery, not historical byte-identical reproduction or public release approval.",
+    "scope": "Ten actual archives cover eight dependency families and retain upstream implementation, license and build files. FFMPEG_BUILDING.md records actual configuration and applicable modification instructions. Co-distribute SingleEditor-v0.1.1-dependency-sources.zip with the binary on the same Release. These records establish source delivery, not historical byte-identical reproduction or public release approval.",
     "archives": [
       {
         "family": "vgmstream",
@@ -414,9 +414,9 @@
   "corresponding_source_complete": true,
   "source_delivery": {
     "status": "co-distribute-with-binaries",
-    "archive": "SingleEditor-v0.1.0-dependency-sources.zip",
+    "archive": "SingleEditor-v0.1.1-dependency-sources.zip",
     "build_instructions": "FFMPEG_BUILDING.md",
-    "public_source_location": "https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.0",
+    "public_source_location": "https://github.com/TATPEACH/SingleEditor/releases/tag/v0.1.1",
     "distribution_requirement": "Publish the complete dependency-source archive and SE source archive on the same Release as the binary."
   },
   "reference_official_runtime": {
