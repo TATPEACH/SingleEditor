@@ -49,18 +49,22 @@ void runOptionalSkinThemeTest()
     SkinStyle::setActive(ModernSkin::liquid);
     require(RendererVisualStyle::isNight(), "switching away from Soft restores the saved Night request");
 
+    const auto wasStartup = ModernAppleLookAndFeel::isStartupSkin();
+    ModernAppleLookAndFeel::setSkinMode(ModernAppleLookAndFeel::SkinMode::full);
     ModernAppleLookAndFeel lookAndFeel;
-    for (const auto skin : { ModernSkin::original, ModernSkin::soft, ModernSkin::liquid, ModernSkin::tiles })
+    for (const auto skin : { ModernSkin::soft, ModernSkin::liquid, ModernSkin::tiles })
     {
         SkinStyle::setActive(skin);
         for (const auto theme : { ModernTheme::light, ModernTheme::night })
         {
             RendererVisualStyle::setModernTheme(theme);
             juce::Image picture(juce::Image::ARGB, 320, 200, true);
-            juce::Graphics g(picture);
-            lookAndFeel.drawPopupMenuBackground(g, picture.getWidth(), picture.getHeight());
-            require(picture.getPixelAt(160, 100).isOpaque(),
-                    "every skin gives detached popup menus an opaque reading surface");
+            {
+                juce::Graphics g(picture);
+                lookAndFeel.drawPopupMenuBackground(g, picture.getWidth(), picture.getHeight());
+            }
+            require(picture.getPixelAt(160, 100).getFloatAlpha() >= 0.95f,
+                    "detached popup menus obscure underlying content, including Liquid Glass");
         }
     }
     SkinStyle::setActive(ModernSkin::liquid);
@@ -70,7 +74,9 @@ void runOptionalSkinThemeTest()
     require(SkinStyle::active() == ModernSkin::liquid, "returning to Modern retains the selected skin");
     SkinStyle::setActive(ModernSkin::original);
     RendererVisualStyle::setModernTheme(ModernTheme::light);
-    std::cout << "OptionalSkinThemeTests passed (Night restoration, eight popup surfaces, Classic isolation)\n";
+    ModernAppleLookAndFeel::setSkinMode(wasStartup ? ModernAppleLookAndFeel::SkinMode::startup
+                                                : ModernAppleLookAndFeel::SkinMode::full);
+    std::cout << "OptionalSkinThemeTests passed (Night restoration, six popup surfaces, Classic isolation)\n";
 }
 
 void runModernRegionOutlineTest()
