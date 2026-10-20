@@ -647,7 +647,8 @@ void Painter::popupBackground(juce::Graphics& g, juce::Rectangle<float> bounds) 
 
 void Painter::popupHighlight(juce::Graphics& g, juce::Rectangle<float> row) const
 {
-    g.setColour(colour(pal().control));
+    // Neutral, but strong enough to follow the keyboard through a menu in both themes.
+    g.setColour(colour(pal().text).withAlpha(isNight() ? 0.11f : 0.075f));
     g.fillRoundedRectangle(row, 6.0f);
 }
 
