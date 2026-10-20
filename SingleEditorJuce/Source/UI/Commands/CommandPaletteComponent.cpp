@@ -16,6 +16,7 @@ CommandPaletteComponent::CommandPaletteComponent(const GuiCommandRegistry& regis
         materialSurface = std::make_unique<ModernGlassSurface>(16.0f);
         materialSurface->setComponentID("command-palette.material");
         materialSurface->getProperties().set("glassChrome", true);
+        materialSurface->getProperties().set("skinRole", "popup");
         materialSurface->setInterceptsMouseClicks(false, false);
         addAndMakeVisible(*materialSurface);
         materialSurface->setInteractionHost(this);

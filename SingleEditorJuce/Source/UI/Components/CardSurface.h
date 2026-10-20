@@ -17,7 +17,13 @@ public:
         {
             if (!SkinStyle::isOriginal())
             {
-                SkinStyle::paintToolbar(g, *this);
+                // A floating glass sheet (the command palette before or without its
+                // sampled backdrop) needs an opaque body; only the toolbar sits on
+                // the skin's own canvas.
+                if (getProperties()["skinRole"].toString() == "popup")
+                    SkinStyle::paintPopupBackground(g, getLocalBounds().toFloat());
+                else
+                    SkinStyle::paintToolbar(g, *this);
                 return;
             }
             ModernGlassPainter::surface(g, getLocalBounds().toFloat(),
