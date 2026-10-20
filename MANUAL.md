@@ -234,10 +234,16 @@ Mag 是工作区中的一个功能面板，例如 Playlist、Metadata、Markers�
 
 **More → Appearance** 提供：
 
-- **Modern Glass – Light / Night**：明亮或深色主题。
-- **Solid – Reduce transparency**：实体背景。
-- **Frosted glass**：磨砂玻璃。
-- **Liquid glass**：液态玻璃。
+- **Skin**：界面皮肤，只改变外观和间距，不改变任何功能，选择会保存。
+  - **Modern Glass (default)**：默认皮肤。
+  - **Soft (light only)**：新拟物风格，只有明亮主题。
+  - **Liquid Glass**：极光背景上的半透明玻璃面板。
+  - **Layered Tiles**：中性底色上的分层磁贴。
+- **Light / Night**：明亮或深色主题；默认皮肤下显示为 **Modern Glass – Light / Night**。Soft 皮肤下 Night 不可用。
+- **Glass material**：
+  - **Solid – Reduce transparency**：实体背景。
+  - **Frosted glass**：磨砂玻璃。
+  - **Liquid glass**：液态玻璃。
 
 **Preferences → Reduce Motion** 可以改用直接状态切换。**Modern** 是当前发布界面；**Classic** 标为工程预览，布局和操作呈现可能不同。本文以 Modern 为主。
 

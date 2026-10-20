@@ -1288,7 +1288,7 @@ MainComponent::MainComponent(juce::ResizableWindow& hostWindowToUse,
         appearanceMenu.addItem(lightThemeItem, themePrefix + "Light", true, !RendererVisualStyle::isNight());
         appearanceMenu.addItem(nightThemeItem, themePrefix + "Night", SkinStyle::supportsNight(SkinStyle::active()),
                                RendererVisualStyle::isNight());
-        appearanceMenu.addSeparator();
+        appearanceMenu.addSectionHeader("Glass material");
         appearanceMenu.addItem(1101, "Solid - Reduce transparency", true, RendererVisualStyle::glassMaterial() == ModernGlassMaterial::solid);
         appearanceMenu.addItem(1102, "Frosted glass", true, RendererVisualStyle::glassMaterial() == ModernGlassMaterial::frosted);
         appearanceMenu.addItem(1103, "Liquid glass", true, RendererVisualStyle::glassMaterial() == ModernGlassMaterial::liquid);

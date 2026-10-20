@@ -95,12 +95,12 @@ const char* SkinStyle::menuName(ModernSkin skin) noexcept
 {
     switch (skin)
     {
-        case ModernSkin::soft: return "A  Soft (light only)";
-        case ModernSkin::liquid: return "C  Liquid Glass";
-        case ModernSkin::tiles: return "D  Layered Tiles";
+        case ModernSkin::soft: return "Soft (light only)";
+        case ModernSkin::liquid: return "Liquid Glass";
+        case ModernSkin::tiles: return "Layered Tiles";
         case ModernSkin::original: break;
     }
-    return "Original (Modern Glass)";
+    return "Modern Glass (default)";
 }
 
 const ModernGlassTokens::Palette& SkinStyle::palette(bool night) noexcept
