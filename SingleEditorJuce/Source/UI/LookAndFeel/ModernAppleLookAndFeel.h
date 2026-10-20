@@ -121,7 +121,6 @@ public:
 
 private:
     juce::Drawable* getCachedButtonIcon(ModernNorthStarAssetId assetId) const;
-    static juce::String choosePreferredFont();
     juce::String preferredFontName;
     mutable juce::CriticalSection iconCacheLock;
     mutable std::unordered_map<std::string, std::unique_ptr<juce::Drawable>> iconCache;

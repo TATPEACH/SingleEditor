@@ -7,6 +7,8 @@ namespace singleeditor
 class ClassicLookAndFeel final : public juce::LookAndFeel_V4
 {
 public:
+    static constexpr const char* sansSerifFamily = "Segoe UI";
+
     ClassicLookAndFeel();
 
     void drawButtonBackground(juce::Graphics& g,

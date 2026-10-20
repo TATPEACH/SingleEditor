@@ -7,6 +7,7 @@
 #include "UI/Components/PreferencesComponent.h"
 #include "UI/MainComponent.h"
 #include "UI/Renderer/RendererSelection.h"
+#include "UI/LookAndFeel/ClassicLookAndFeel.h"
 #include "UI/LookAndFeel/WindowChromeLookAndFeel.h"
 
 #include <future>
@@ -61,6 +62,13 @@ void SingleEditorApplication::initialise(const juce::String& commandLine)
     {
         startupWindowChrome = std::make_unique<WindowChromeLookAndFeel>();
         juce::LookAndFeel::setDefaultLookAndFeel(startupWindowChrome.get());
+    }
+    else
+    {
+        // Classic draws its startup frame with JUCE's own LookAndFeel. Name the
+        // Classic face there too: JUCE keeps text layouts made before CoreReady.
+        juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypefaceName(
+            ClassicLookAndFeel::sansSerifFamily);
     }
     audioEngine.warmUpAudioDeviceAsync(initialFile.existsAsFile() ? 40 : 420);
 

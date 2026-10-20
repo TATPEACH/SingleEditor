@@ -29,7 +29,7 @@ bool usesStartupConstants() noexcept
 }
 
 ModernAppleLookAndFeel::ModernAppleLookAndFeel()
-    : WindowChromeLookAndFeel(true), preferredFontName(choosePreferredFont())
+    : WindowChromeLookAndFeel(true), preferredFontName(ModernTypography::sansSerifFamily())
 {
     RendererSelection::noteRendererObject(RendererKind::modern);
     if (preferredFontName.isNotEmpty())
@@ -849,39 +849,5 @@ juce::Drawable* ModernAppleLookAndFeel::getCachedButtonIcon(ModernNorthStarAsset
     auto* result = drawable.get();
     iconCache.emplace(key, std::move(drawable));
     return result;
-}
-
-juce::String ModernAppleLookAndFeel::choosePreferredFont()
-{
-    const auto available = juce::Font::findAllTypefaceNames();
-
-    // Round 8 body family order; display faces should not be used for every
-    // compact label. Keep installed-font fallback and native Unicode shaping.
-    for (const auto* candidate : { "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI" })
-        if (available.contains(candidate)) return candidate;
-    for (const auto& candidate : { ModernNorthStarVisualContract::Typography::displayPrimary,
-                                   ModernNorthStarVisualContract::Typography::bodyPrimary,
-                                   ModernNorthStarVisualContract::Typography::displayFallback,
-                                   ModernNorthStarVisualContract::Typography::bodyFallback })
-    {
-        if (available.contains(candidate))
-            return candidate;
-    }
-
-    // Chinese-friendly system fonts (for Chinese characters)
-    for (const auto& candidate : { "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "PingFang" })
-    {
-        if (available.contains(candidate))
-            return candidate;
-    }
-
-    // Generic modern fallback
-    for (const auto& candidate : { "Segoe UI", "Helvetica Neue", "Helvetica", "Arial" })
-    {
-        if (available.contains(candidate))
-            return candidate;
-    }
-
-    return {};
 }
 } // namespace singleeditor

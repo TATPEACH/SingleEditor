@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_gui_basics/juce_gui_basics.h>
+#include "UI/LookAndFeel/ModernTypography.h"
 #include "UI/LookAndFeel/StartupCoreSkin.h"
 #include "UI/Renderer/RendererVisualStyle.h"
 #include "UI/Skins/SkinStyle.h"
@@ -8,12 +9,29 @@
 namespace singleeditor
 {
 // The startup instance draws only neutral window controls. It loads no renderer
-// fonts/assets and keeps the same JUCE/Win32 peer when the full skin is attached.
+// assets and keeps the same JUCE/Win32 peer when the full skin is attached; its
+// text already uses the full skin's face.
 class WindowChromeLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
     static constexpr int captionHeight = 32;
     explicit WindowChromeLookAndFeel(bool modern = false) : modernPalette(modern) {}
+
+    // JUCE resolves unnamed fonts through the default LookAndFeel and keeps the
+    // glyph layouts made before CoreReady, so the startup frame must not fall
+    // back to JUCE's own default (Verdana on Windows). The family is looked up
+    // on the first text layout, after the window's DirectWrite resources exist.
+    juce::Typeface::Ptr getTypefaceForFont(const juce::Font& font) override
+    {
+        if (font.getTypefaceName() == juce::Font::getDefaultSansSerifFontName())
+            if (const auto& family = ModernTypography::sansSerifFamily(); family.isNotEmpty())
+            {
+                auto named = font;
+                named.setTypefaceName(family);
+                return juce::Typeface::createSystemTypefaceFor(named);
+            }
+        return juce::LookAndFeel_V4::getTypefaceForFont(font);
+    }
 
     std::unique_ptr<juce::DropShadower> createDropShadowerForComponent(juce::Component& component) override
     {

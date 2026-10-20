@@ -8,7 +8,7 @@ namespace singleeditor
 ClassicLookAndFeel::ClassicLookAndFeel()
 {
     RendererSelection::noteRendererObject(RendererKind::classic);
-    setDefaultSansSerifTypefaceName("Segoe UI");
+    setDefaultSansSerifTypefaceName(sansSerifFamily);
     setColour(juce::ResizableWindow::backgroundColourId, RendererVisualStyle::windowBackground());
     setColour(juce::DocumentWindow::backgroundColourId, RendererVisualStyle::windowBackground());
     setColour(juce::Label::textColourId, RendererVisualStyle::primaryText());
